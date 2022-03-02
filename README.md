@@ -1,3 +1,12 @@
+
+# axios 二次封装
+
+> 请求缓存、请求取消
+
+1. https://mp.weixin.qq.com/s?__biz=MzUyMTMxMTc1Ng==&mid=2247483802&idx=1&sn=1b31b7310c2c8d19ee86df22469442e4&chksm=f9dc42f9ceabcbefa34e2300f53c02dbee59b49020058be129ca403d36aa7d371d1d2d45393d&mpshare=1&scene=23&srcid=&sharer_sharetime=1587641354860&sharer_shareid=5de769e396b702376521b4a2994023c8#rd
+2. https://mp.weixin.qq.com/s?__biz=MzUyMTMxMTc1Ng==&mid=2247483802&idx=1&sn=1b31b7310c2c8d19ee86df22469442e4&chksm=f9dc42f9ceabcbefa34e2300f53c02dbee59b49020058be129ca403d36aa7d371d1d2d45393d&mpshare=1&scene=23&srcid=&sharer_sharetime=1587641354860&sharer_shareid=5de769e396b702376521b4a2994023c8#rd
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
