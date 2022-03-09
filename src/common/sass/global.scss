@@ -1,4 +1,3 @@
-
 /*
  * G-xx： 表示全局样式，用来定义公用样式。
  * P-xx: 表示页面样式，用来设置页面的背景色、尺寸、定制化调整在此页面的组件样式。
@@ -6,17 +5,23 @@
  */
 
 /*清浮动*/
-.clearfix:after
-    content: "."
-    display: block
-    height: 0
-    clear: both
-    visibility: hidden
-.clearfix
-    display: block
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+.clearfix {
+  display: block;
+}
 
-.G-col-error
-    color: #f81d22
+.G-col-error {
+  color: #f81d22;
+}
+.G-col-succ {
+  color: #0b8235;
+}
 
-.G-col-succ
-    color: #0b8235
+$test-color: #1c1c1c;
+$text-color: #fff;
