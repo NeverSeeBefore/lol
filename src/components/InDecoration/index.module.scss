@@ -1,0 +1,47 @@
+
+.inDecoration {
+    width: 100%;
+    height: 100%;
+    background-color: #010a13;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    // color: #928e81;
+    font-size: 16px;
+}
+
+.animationView {
+    width: 500px;
+    height: 100px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: nowrap;
+}
+.animationItem{
+    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
+    font-size: 0px;
+    letter-spacing: 0;
+    // background-image: url('../../common/assets/in-decoration-opacity-white.png');
+
+    // &:nth-of-type(2n) {
+    //     animation: decoration 5s linear infinite;
+    // }
+    // &:nth-of-type(2n+1) {
+    //     animation: decoration 5s linear 5s infinite;
+    // }
+}
+.tip {
+    color: #f0e6d2;
+}
+
+@keyframes decoration {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0%);
+    }
+}
