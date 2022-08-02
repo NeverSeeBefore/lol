@@ -12,9 +12,20 @@ npx husky add .husky/pre-commit "npx lint-staged"
   https://github.com/conventional-changelog/commitlint
 
 1.  npx husky install
-2.  cat <<EEE > .husky/commit-msg
-    #!/bin/sh
-    . "\$(dirname "\$0")/\_/husky.sh"
-    npx --no -- commitlint --edit "\${1}"
-    EEE
+2.
+
+```js
+cat <<EEE > .husky/commit-msg
+#!/bin/sh
+. "\$(dirname "\$0")/_/husky.sh"
+
+npx --no -- commitlint --edit "\${1}"
+EEE
+```
+
 3.  chmod a+x .husky/commit-msg
+
+## help
+
+- eslintrc debug
+  npx eslint --debug /Users/chenxiaoxu/Desktop/personal/lol/.eslintrc.js
