@@ -2,7 +2,6 @@ const OFF = 0;
 const WARN = 1;
 const ERROR = 2;
 
-// eslint-disable-next-line unicorn/prefer-module
 module.exports = {
   env: {
     browser: true,
@@ -20,6 +19,19 @@ module.exports = {
     'plugin:promise/recommended',
     // ts 检查
     'plugin:@typescript-eslint/recommended',
+
+    // 禁用与prettier 冲突的规则
+    'plugin:prettier/recommended',
+    // 'plugin:prettier/recommended' 相当于
+    // {
+    //   "extends": ["prettier"],
+    //   "plugins": ["prettier"],
+    //   "rules": {
+    //     "prettier/prettier": "error",
+    //     "arrow-body-style": "off",
+    //     "prefer-arrow-callback": "off"
+    //   }
+    // }
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -82,6 +94,7 @@ module.exports = {
     'unicorn/prefer-query-selector': ERROR,
     'unicorn/no-null': OFF,
     'unicorn/no-array-reduce': OFF,
+    'unicorn/prefer-module': OFF,
 
     '@typescript-eslint/no-useless-constructor': ERROR,
     '@typescript-eslint/no-empty-function': WARN,
@@ -115,7 +128,7 @@ module.exports = {
     'no-plusplus': OFF,
     'no-console': OFF,
     'class-methods-use-this': ERROR,
-    'jsx-quotes': [ERROR, 'prefer-single'],
+    'jsx-quotes': [ERROR, 'prefer-double'],
     'global-require': OFF,
     'no-use-before-define': OFF,
     'no-restricted-syntax': OFF,

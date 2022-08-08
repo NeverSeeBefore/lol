@@ -44,7 +44,7 @@
   "less.validate": false,
   "scss.validate": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true,
-    "source.fixAll.stylelint": true
+    // "source.fixAll.eslint": true,
+    // "source.fixAll.stylelint": true
   }
 }

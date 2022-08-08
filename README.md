@@ -29,3 +29,8 @@ EEE
 
 - eslintrc debug
   npx eslint --debug /Users/chenxiaoxu/Desktop/personal/lol/.eslintrc.js
+
+## package
+
+eslint-plugin-prettier：Runs Prettier as an ESLint rule and reports differences as individual ESLint issues.
+eslint-config-prettier：Turns off all rules that are unnecessary or might conflict with [Prettier].(extends: [..., prettier])
