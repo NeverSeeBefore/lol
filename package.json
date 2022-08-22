@@ -103,7 +103,8 @@
     "@babel/runtime-corejs3": "^7.18.9",
     "clean-webpack-plugin": "^4.0.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0"
   },
   "browserslist": [
     ">0.2%",

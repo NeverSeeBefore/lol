@@ -145,6 +145,7 @@ module.exports = {
       Src: resolve(PROJECT_PATH, './src'),
       Components: resolve(PROJECT_PATH, './src/components'),
       Utils: resolve(PROJECT_PATH, './src/utils'),
+      Static: resolve(PROJECT_PATH, './src/static'),
     },
   },
   // 外部cdn引入
