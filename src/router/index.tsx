@@ -1,10 +1,11 @@
 import React from 'react';
-import { RouteObject, useRoutes } from 'react-router-dom';
+import { RouteObject } from 'react-router-dom';
 import About from 'Src/views/About';
 
 import Home from 'Src/views/Home';
 import NotFound from 'Src/views/NotFound';
 import Site from 'Src/views/Site';
+import Test from 'Src/views/Test';
 
 export const routeConfig: RouteObject[] = [
   {
@@ -18,6 +19,10 @@ export const routeConfig: RouteObject[] = [
   {
     path: '/about',
     element: <About />,
+  },
+  {
+    path: '/test',
+    element: <Test />,
   },
   {
     path: '*',
