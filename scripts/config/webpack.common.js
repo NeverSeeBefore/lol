@@ -15,7 +15,12 @@ const getCssLoaders = (importLoaders) => [
   {
     loader: 'css-loader',
     options: {
-      modules: false, // 默认就是 false, 若要开启，可在官网具体查看可配置项
+      // modules 默认就是 false, 若要开启，可在官网具体查看可配置项
+      // TODO: 区分依赖包、全局样式、
+      modules: {
+        auto: true, // 为/\.module\.\w+$/i.test(filename) 和 /\.icss\.\w+$/i.test(filename) 正则表达式的文件启用 CSS 模块。
+        localIdentName: isDev ? '[local]_[hash:base64:5]' : '[hash:base64]',
+      },
       sourceMap: isDev, // 开启后与 devtool 设置一致, 开发环境开启，生产环境关闭
       importLoaders, // 指定在 CSS loader 处理前使用的 laoder 数量
     },

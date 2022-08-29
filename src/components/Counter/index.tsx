@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'Src/hooks';
 import { incrementByAmount, decrement, increment, fetchSyncNumber } from 'Src/store/feature/counterSlice';
+import styles from './index.module.less';
+
+console.log(styles);
 
 export default function Counter() {
   console.log('render');
@@ -10,7 +13,7 @@ export default function Counter() {
   const [amount, setAmount] = useState(1);
 
   return (
-    <div>
+    <div className={styles['counter-container']}>
       <div>counter: {title}</div>
       <div>{countValue}</div>
       <div>
