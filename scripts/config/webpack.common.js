@@ -43,7 +43,12 @@ const getCssLoaders = (importLoaders) => [
               stage: 3,
             },
           ],
-          postCssNormalize,
+          [
+            postCssNormalize().postcssPlugin,
+            {
+              // forceImport: 'normalize.css',
+            },
+          ],
         ],
       },
     },
