@@ -1,11 +1,20 @@
 :root {
   --grid-gap: 15px;
+  --page-bg-color: #0f0f0f;
+  --page-font-color: #fff;
 }
 
 html,
 body {
   display: flex;
   flex: 1;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  color: var(--page-font-color);
+  background-color: var(--page-bg-color);
 }
 
 .useless {

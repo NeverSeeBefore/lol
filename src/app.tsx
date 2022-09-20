@@ -1,16 +1,14 @@
 import React from 'react';
-import { add } from 'Utils/math';
 import Nav from 'Components/Nav';
 import { useRoutes } from 'react-router-dom';
 import { routeConfig } from './router';
+import './app.less';
 
-interface IProps {}
-
-function App(props: IProps) {
+function App() {
   return (
     <div className="app">
       <Nav />
-      {useRoutes(routeConfig)}
+      <div className="main">{useRoutes(routeConfig)}</div>
     </div>
   );
 }

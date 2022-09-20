@@ -57,6 +57,7 @@ module.exports = {
   output: {
     filename: `js/[name]${isDev ? '' : '.[hash:8]'}.js`,
     path: resolve(PROJECT_PATH, './dist'),
+    publicPath: '/',
   },
   module: {
     rules: [
