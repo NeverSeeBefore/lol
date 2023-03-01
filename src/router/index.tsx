@@ -9,6 +9,7 @@ import NotFound from 'Src/views/NotFound';
 import Site from 'Src/views/Site';
 import Test from 'Src/views/Test';
 import TweenDemo from 'Src/views/Test/components/TweenDemo';
+import ColorTransform from 'Src/views/Test/components/ColorTransform';
 
 export const routeConfig: RouteObject[] = [
   {
@@ -39,6 +40,10 @@ export const routeConfig: RouteObject[] = [
       {
         path: 'loading',
         element: <Loading />,
+      },
+      {
+        path: 'color-transform',
+        element: <ColorTransform />,
       },
     ],
   },

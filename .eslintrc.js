@@ -105,6 +105,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': ERROR,
     '@typescript-eslint/no-unused-vars': WARN,
     '@typescript-eslint/no-empty-interface': OFF,
+    '@typescript-eslint/no-shadow': ERROR,
     'no-unused-vars': OFF,
 
     'react/jsx-filename-extension': [ERROR, { extensions: ['.tsx', 'ts', '.jsx', 'js'] }],
@@ -135,5 +136,7 @@ module.exports = {
     'no-restricted-syntax': OFF,
     'no-continue': OFF,
     'no-param-reassign': OFF,
+    'default-case': OFF,
+    'no-shadow': OFF,
   },
 };

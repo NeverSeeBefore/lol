@@ -3,6 +3,7 @@ import Nav from 'Components/Nav';
 import { useRoutes } from 'react-router-dom';
 import { routeConfig } from './router';
 import './app.less';
+import 'antd/dist/reset.css';
 
 function App() {
   return (

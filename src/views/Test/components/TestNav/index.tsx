@@ -8,7 +8,8 @@ export default function TestNav() {
         home
       </NavLink>
       | <NavLink to="counter">counter</NavLink> | <NavLink to="tween">tween</NavLink> |
-      <NavLink to="loading">loading</NavLink> |<NavLink to="aaa">404</NavLink>
+      <NavLink to="loading">loading</NavLink> | <NavLink to="aaa">404</NavLink> |
+      <NavLink to="color-transform">ColorTransform</NavLink>
     </div>
   );
 }
