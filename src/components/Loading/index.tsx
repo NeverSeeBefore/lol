@@ -8,7 +8,7 @@ function drawCircle(ctx: CanvasRenderingContext2D, width: number, height: number
   // const centerX = width / 2;
   // const centerY = height / 2;
   ctx.setLineDash([1, 8.9]);
-  ctx.lineDashOffset = -offset;
+  ctx.lineDashOffset = -offset * 0.75;
   ctx.lineWidth = 4;
   ctx.strokeStyle = color;
   ctx.arc(width / 2, height / 2, 30, 0, Math.PI * 2);
@@ -251,7 +251,7 @@ export default function Loading() {
     if (lastTime === 0) {
       lastTime = time;
     }
-    if (time - lastTime > 30) {
+    if (time - lastTime > 25) {
       lastTime = time;
 
       const ctx = cvsRef.current.getContext('2d');
@@ -265,22 +265,22 @@ export default function Loading() {
       drawRect(ctx, width, height, {
         halfStepCount: 40,
         rectWidth: 46.67,
-        gap: 10,
-        sleep: 10,
+        gap: 4,
+        sleep: 12,
         offset: count,
         lineWidth: 1,
         lineColor: 'rgba(132,112,64, .6)',
       });
       drawRect(ctx, width, height, {
-        halfStepCount: 35,
+        halfStepCount: 32,
         rectWidth: 23.3,
-        gap: 3,
-        sleep: 30,
+        gap: 8,
+        sleep: 24,
         offset: count,
         lineWidth: 2,
         lineColor: 'rgba(132,112,64, 1)',
       });
-      drawRotateRect(ctx, width, height, 200, 'rgb(134, 112, 64)', count);
+      drawRotateRect(ctx, width, height, 180, 'rgb(134, 112, 64)', count);
       count++;
     }
     requestAnimationFrame(loadingAnimation);
