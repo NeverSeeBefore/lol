@@ -54,7 +54,7 @@ function TweenDemo() {
               width={canvasWidth}
               height={canvasHeight}
             />
-            <div style={{ width: '100%', textAlign: 'center' }}>{funName}</div>
+            <div style={{ width: '100%', textAlign: 'center', position: 'absolute', top: '0' }}>{funName}</div>
           </div>
         );
       })}
