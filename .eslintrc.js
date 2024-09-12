@@ -138,5 +138,6 @@ module.exports = {
     'no-param-reassign': OFF,
     'default-case': OFF,
     'no-shadow': OFF,
+    'dot-notation': OFF,
   },
 };

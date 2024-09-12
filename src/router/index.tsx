@@ -10,23 +10,45 @@ import Site from 'Src/views/Site';
 import Test from 'Src/views/Test';
 import TweenDemo from 'Src/views/Test/components/TweenDemo';
 import ColorTransform from 'Src/views/Test/components/ColorTransform';
+import Login from 'Src/views/Login';
+import Main from 'Src/components/Main';
 
 export const routeConfig: RouteObject[] = [
   {
     path: '/',
-    element: <Home />,
+    element: (
+      <Main>
+        <Home />
+      </Main>
+    ),
+  },
+  {
+    path: 'login',
+    element: <Login />,
   },
   {
     path: '/site',
-    element: <Site />,
+    element: (
+      <Main>
+        <Site />
+      </Main>
+    ),
   },
   {
     path: '/about',
-    element: <About />,
+    element: (
+      <Main>
+        <About />
+      </Main>
+    ),
   },
   {
     path: '/test',
-    element: <Test />,
+    element: (
+      <Main>
+        <Test />
+      </Main>
+    ),
     children: [
       {
         path: 'counter',
