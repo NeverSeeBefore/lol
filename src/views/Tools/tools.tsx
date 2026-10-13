@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import Base64UrlCodec from './Base64UrlCodec';
 import ColorConverter from './ColorConverter';
 import JsonFormatter from './JsonFormatter';
 import TimestampConverter from './TimestampConverter';
@@ -30,5 +31,10 @@ export const tools: ToolItem[] = [
     name: '时间戳转换',
     path: 'timestamp',
     element: <TimestampConverter />,
+  },
+  {
+    name: 'Base64/URL',
+    path: 'codec',
+    element: <Base64UrlCodec />,
   },
 ];

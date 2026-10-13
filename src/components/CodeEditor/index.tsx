@@ -51,13 +51,22 @@ export interface CodeEditorProps {
   /** 基于文档内容产出诊断标记（行内红波浪线）；返回空数组表示无错误 */
   lint?: (doc: string) => Diagnostic[];
   placeholder?: string;
+  /** 语言扩展，仅挂载时读取（编辑器实例只创建一次）；默认 'json' 保持既有行为 */
+  language?: 'json' | 'text';
 }
 
 /**
  * CodeMirror 6 受控封装：React 侧只见 value/onChange，
  * EditorView 生命周期在 useEffect 内创建与销毁。
  */
-export default function CodeEditor({ value, onChange, readOnly = false, lint, placeholder }: CodeEditorProps) {
+export default function CodeEditor({
+  value,
+  onChange,
+  readOnly = false,
+  lint,
+  placeholder,
+  language = 'json',
+}: CodeEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
@@ -74,7 +83,7 @@ export default function CodeEditor({ value, onChange, readOnly = false, lint, pl
       highlightActiveLine(),
       history(),
       keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
-      json(),
+      ...(language === 'json' ? [json()] : []),
       darkTheme,
       syntaxHighlighting(darkHighlight, { fallback: true }),
       EditorView.lineWrapping,
