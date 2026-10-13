@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import ColorConverter from './ColorConverter';
 import JsonFormatter from './JsonFormatter';
+import TimestampConverter from './TimestampConverter';
 
 export interface ToolItem {
   /** 导航显示名 */
@@ -24,5 +25,10 @@ export const tools: ToolItem[] = [
     name: '颜色转换',
     path: 'color',
     element: <ColorConverter />,
+  },
+  {
+    name: '时间戳转换',
+    path: 'timestamp',
+    element: <TimestampConverter />,
   },
 ];
