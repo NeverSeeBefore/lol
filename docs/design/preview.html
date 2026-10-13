@@ -1,0 +1,1011 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lol-f 暗色 UI 设计规范 · 预览</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg-base: #131417;
+        --bg-raised: #1a1c20;
+        --bg-overlay: #22252b;
+        --bg-hover: #2a2e35;
+        --bg-active: #32363f;
+        --text-primary: #e8ecf1;
+        --text-secondary: #9aa7b4;
+        --text-tertiary: #788290;
+        --text-disabled: #454f5b;
+        --text-on-accent: #1a1206;
+        --accent: #fa8c16;
+        --accent-hover: #fba33f;
+        --accent-active: #e07b0a;
+        --accent-text: #ffb75c;
+        --accent-bg: rgba(250, 140, 22, 0.12);
+        --success: #4cc38a;
+        --error: #f2555a;
+        --info: #5aa9ff;
+        --warning: #f0c040;
+        --tool-json: #3ec6e0;
+        --tool-color: #a78bfa;
+        --tool-time: #e879c6;
+        --code-key: #8fb8ff;
+        --code-string: #7fd8a4;
+        --code-number: #ffb75c;
+        --border-control: #5a6472;
+        --focus-ring: #ffb75c;
+        --border: rgba(232, 236, 241, 0.09);
+        --border-strong: rgba(232, 236, 241, 0.16);
+        --shadow-overlay: 0 8px 24px rgba(0, 0, 0, 0.5);
+        --radius-sm: 4px;
+        --radius-md: 8px;
+        --radius-lg: 12px;
+        --font-sans:
+          -apple-system, blinkmacsystemfont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+          sans-serif;
+        --font-mono: 'JetBrains Mono', 'SF Mono', sfmono-regular, consolas, monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        background-color: var(--bg-base);
+        color: var(--text-primary);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0;
+      }
+
+      .page {
+        margin: 0 auto;
+        max-width: 960px;
+        padding: 64px 32px 96px;
+      }
+
+      /* ---------- 页头 ---------- */
+      .hero {
+        animation: hero-in 250ms cubic-bezier(0.2, 0, 0, 1) both;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 64px;
+        padding-bottom: 48px;
+      }
+
+      @keyframes hero-in {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hero {
+          animation: none;
+        }
+      }
+
+      .hero h1 {
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 1.25;
+        margin: 0 0 12px;
+      }
+
+      .hero .concept {
+        color: var(--text-secondary);
+        font-size: 16px;
+        margin: 0;
+        max-width: 560px;
+      }
+
+      .hero .concept em {
+        color: var(--accent-text);
+        font-style: normal;
+      }
+
+      /* ---------- 章节 ---------- */
+      .section {
+        margin-bottom: 72px;
+      }
+
+      .section h2 {
+        border-bottom: 1px solid var(--border);
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 1.25;
+        margin: 0 0 8px;
+        padding-bottom: 12px;
+      }
+
+      .section .desc {
+        color: var(--text-secondary);
+        margin: 12px 0 24px;
+        max-width: 640px;
+      }
+
+      .section h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 32px 0 16px;
+      }
+
+      /* ---------- 色板 ---------- */
+      .swatch-grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      }
+
+      .swatch {
+        background-color: var(--bg-raised);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+      }
+
+      .swatch .chip {
+        height: 64px;
+      }
+
+      .swatch .meta {
+        padding: 10px 12px;
+      }
+
+      .swatch .name {
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .swatch .hex {
+        color: var(--text-tertiary);
+        font-family: var(--font-mono);
+        font-size: 12px;
+      }
+
+      .swatch .usage {
+        color: var(--text-secondary);
+        font-size: 12px;
+        margin-top: 6px;
+      }
+
+      /* ---------- 字体阶梯 ---------- */
+      .type-row {
+        align-items: baseline;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 24px;
+        padding: 12px 0;
+      }
+
+      .type-row .size {
+        color: var(--text-tertiary);
+        flex: none;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        width: 120px;
+      }
+
+      .type-row .sample {
+        line-height: 1.25;
+      }
+
+      .mono-sample {
+        background-color: var(--bg-raised);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        font-family: var(--font-mono);
+        font-size: 13px;
+        margin-top: 24px;
+        padding: 20px 24px;
+      }
+
+      .mono-sample .key {
+        color: var(--code-key);
+      }
+      .mono-sample .str {
+        color: var(--code-string);
+      }
+      .mono-sample .num {
+        color: var(--code-number);
+      }
+      .mono-sample .punc {
+        color: var(--text-secondary);
+      }
+
+      /* ---------- 间距 ---------- */
+      .space-row {
+        align-items: center;
+        display: flex;
+        gap: 16px;
+        margin-bottom: 8px;
+      }
+
+      .space-row .label {
+        color: var(--text-tertiary);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        width: 64px;
+      }
+
+      .space-row .bar {
+        background-color: var(--accent-bg);
+        border-left: 2px solid var(--accent);
+        height: 16px;
+      }
+
+      /* ---------- 组件 ---------- */
+      .demo-panel {
+        background-color: var(--bg-raised);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        margin-bottom: 16px;
+        padding: 24px;
+      }
+
+      .demo-panel .panel-title {
+        color: var(--text-tertiary);
+        font-size: 12px;
+        margin: 0 0 16px;
+      }
+
+      .btn {
+        border: 1px solid transparent;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-family: var(--font-sans);
+        font-size: 14px;
+        line-height: 1.5;
+        padding: 6px 16px;
+        transition:
+          background-color 150ms cubic-bezier(0.2, 0, 0, 1),
+          border-color 150ms cubic-bezier(0.2, 0, 0, 1),
+          color 150ms cubic-bezier(0.2, 0, 0, 1);
+      }
+
+      .btn:focus-visible {
+        outline: 2px solid var(--accent-text);
+        outline-offset: 2px;
+      }
+
+      .btn-primary {
+        background-color: var(--accent);
+        color: var(--text-on-accent);
+        font-weight: 600;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-hover);
+      }
+      .btn-primary:active {
+        background-color: var(--accent-active);
+      }
+
+      .btn-ghost {
+        background-color: transparent;
+        border-color: var(--border-strong);
+        color: var(--text-primary);
+      }
+
+      .btn-ghost:hover {
+        background-color: var(--bg-hover);
+      }
+
+      .btn-text {
+        background-color: transparent;
+        color: var(--accent-text);
+      }
+
+      .btn-text:hover {
+        text-decoration: underline;
+      }
+
+      .btn:disabled {
+        background-color: transparent; /* 禁用态只能更暗或持平，不能比容器更亮 */
+        border-color: var(--border);
+        color: var(--text-disabled);
+        cursor: not-allowed;
+        font-weight: 400;
+      }
+
+      .btn + .btn {
+        margin-left: 12px;
+      }
+
+      /* 导航 */
+      .nav-demo {
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 32px;
+        padding-bottom: 0;
+      }
+
+      .nav-demo a {
+        border-bottom: 2px solid transparent;
+        color: var(--text-secondary);
+        font-size: 15px;
+        padding: 12px 0 10px;
+        text-decoration: none;
+      }
+
+      .nav-demo a:hover {
+        color: var(--text-primary);
+      }
+
+      .nav-demo a.active {
+        border-bottom-color: var(--accent);
+        color: var(--accent-text);
+        font-weight: 600;
+      }
+
+      /* 输入框 */
+      .input-demo {
+        background-color: var(--bg-base);
+        border: 1px solid var(--border-control); /* 控件边界 3.6:1，不用发丝线 */
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        padding: 7px 12px;
+        width: 280px;
+      }
+
+      .input-demo::placeholder {
+        color: var(--text-tertiary);
+      }
+
+      .input-demo:focus-visible {
+        border-color: var(--accent);
+        outline: 2px solid var(--focus-ring); /* 与按钮同一套焦点语言，不用外发光 */
+        outline-offset: 2px;
+      }
+
+      /* 标签 */
+      .tag {
+        border-radius: var(--radius-sm);
+        display: inline-block;
+        font-size: 12px;
+        line-height: 1.5;
+        padding: 1px 8px;
+      }
+
+      .tag-accent {
+        background-color: var(--accent-bg);
+        color: var(--accent-text);
+      }
+      .tag-success {
+        background-color: rgba(76, 195, 138, 0.12);
+        color: var(--success);
+      }
+      .tag-error {
+        background-color: rgba(242, 85, 90, 0.12);
+        color: var(--error);
+      }
+      .tag + .tag {
+        margin-left: 8px;
+      }
+
+      /* 列表 */
+      .list-demo {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+      }
+
+      .list-demo .row {
+        align-items: center;
+        background-color: var(--bg-raised);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 16px;
+      }
+
+      .list-demo .row:last-child {
+        border-bottom: none;
+      }
+      .list-demo .row:hover {
+        background-color: var(--bg-hover);
+      }
+      .list-demo .row.selected {
+        background-color: var(--accent-bg);
+      }
+      .list-demo .row .meta {
+        color: var(--text-tertiary);
+        font-size: 12px;
+      }
+
+      /* 提示条 */
+      .alert {
+        border: 1px solid var(--border);
+        border-left-width: 3px;
+        border-radius: var(--radius-sm);
+        font-size: 13px;
+        margin-bottom: 12px;
+        padding: 10px 14px;
+      }
+
+      .alert-error {
+        border-left-color: var(--error);
+        color: var(--text-primary);
+      }
+      .alert-error strong {
+        color: var(--error);
+      }
+      .alert-info {
+        border-left-color: var(--info);
+      }
+      .alert-info strong {
+        color: var(--info);
+      }
+
+      /* 弹层示意 */
+      .overlay-demo {
+        background-color: var(--bg-overlay);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-overlay);
+        max-width: 360px;
+        padding: 24px;
+      }
+
+      .overlay-demo h4 {
+        font-size: 16px;
+        margin: 0 0 8px;
+      }
+      .overlay-demo p {
+        color: var(--text-secondary);
+        margin: 0 0 20px;
+      }
+
+      /* 页面示意 */
+      .page-mock {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+      }
+
+      .page-mock .mock-nav {
+        align-items: center;
+        background-color: var(--bg-raised);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 24px;
+        padding: 10px 20px;
+      }
+
+      .page-mock .mock-nav .logo {
+        color: var(--text-primary);
+        font-weight: 700;
+        margin-right: 12px;
+      }
+
+      .page-mock .mock-nav span {
+        color: var(--text-secondary);
+        font-size: 13px;
+      }
+      .page-mock .mock-nav span.on {
+        color: var(--accent-text);
+        font-weight: 600;
+      }
+
+      .page-mock .mock-body {
+        display: flex;
+        min-height: 200px;
+      }
+
+      .page-mock .mock-side {
+        background-color: var(--bg-raised);
+        border-right: 1px solid var(--border);
+        flex: none;
+        padding: 16px;
+        width: 180px;
+      }
+
+      .page-mock .mock-side div {
+        border-radius: var(--radius-sm);
+        color: var(--text-secondary);
+        font-size: 13px;
+        padding: 7px 10px;
+      }
+
+      .page-mock .mock-side div.on {
+        background-color: rgba(62, 198, 224, 0.12); /* 工具专属色 12% 底，不是琥珀 */
+        color: var(--tool-json);
+        font-weight: 600;
+      }
+
+      .page-mock .mock-main {
+        flex: 1;
+        padding: 20px 24px;
+      }
+
+      .page-mock .mock-editor {
+        background-color: var(--bg-raised);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 1.7;
+        padding: 14px 18px;
+      }
+
+      /* 工具卡片墙（Riot 式 tile：封面区 + 专属色状态条） */
+      .tile-wall {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+
+      .tile {
+        background-color: var(--bg-raised);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        cursor: pointer;
+        overflow: hidden;
+        transition: background-color 150ms cubic-bezier(0.2, 0, 0, 1);
+      }
+
+      .tile:hover {
+        background-color: var(--bg-hover);
+      }
+
+      .tile .cover {
+        align-items: center;
+        background-color: var(--bg-overlay);
+        display: flex;
+        font-family: var(--font-mono);
+        font-size: 28px;
+        height: 110px;
+        justify-content: center;
+      }
+
+      .tile .strip {
+        color: var(--text-on-accent);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 12px;
+      }
+
+      .tile .label {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        padding: 12px 14px;
+      }
+
+      .tile .label .dot {
+        border-radius: 50%;
+        flex: none;
+        height: 8px;
+        width: 8px;
+      }
+
+      .tile .label .name {
+        font-weight: 600;
+      }
+
+      .tile-json .cover {
+        color: var(--tool-json);
+      }
+      .tile-json .strip {
+        background-color: var(--tool-json);
+      }
+      .tile-json .dot {
+        background-color: var(--tool-json);
+      }
+
+      .tile-color .cover {
+        color: var(--tool-color);
+      }
+      .tile-color .strip {
+        background-color: var(--tool-color);
+      }
+      .tile-color .dot {
+        background-color: var(--tool-color);
+      }
+
+      .tile-time .cover {
+        color: var(--tool-time);
+      }
+      .tile-time .strip {
+        background-color: var(--tool-time);
+      }
+      .tile-time .dot {
+        background-color: var(--tool-time);
+      }
+
+      .footer {
+        border-top: 1px solid var(--border);
+        color: var(--text-tertiary);
+        font-size: 12px;
+        padding-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <h1>lol-f 暗色界面规范</h1>
+        <p class="concept">
+          墨底 +
+          台灯：中性墨黑是夜色，<em>琥珀暖橙</em>是工作台上亮着的那盏灯。层级靠明度表达；色彩分两级——琥珀管交互，工具专属色管身份。
+        </p>
+      </header>
+
+      <!-- 色彩 -->
+      <section class="section">
+        <h2>色彩</h2>
+        <p class="desc">四级背景阶梯，越浮越亮；文字三级明度递减；琥珀是唯一的大面积暖色。</p>
+
+        <h3>背景层级</h3>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="chip" style="background: #131417"></div>
+            <div class="meta">
+              <div class="name">bg-base</div>
+              <div class="hex">#131417</div>
+              <div class="usage">页面底色 · 中性不带色相</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #1a1c20"></div>
+            <div class="meta">
+              <div class="name">bg-raised</div>
+              <div class="hex">#1A1C20</div>
+              <div class="usage">卡片、面板</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #22252b"></div>
+            <div class="meta">
+              <div class="name">bg-overlay</div>
+              <div class="hex">#22252B</div>
+              <div class="usage">弹窗、浮层</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #2a2e35"></div>
+            <div class="meta">
+              <div class="name">bg-hover</div>
+              <div class="hex">#2A2E35</div>
+              <div class="usage">悬浮/按下</div>
+            </div>
+          </div>
+        </div>
+
+        <h3>文字</h3>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="chip" style="background: #e8ecf1"></div>
+            <div class="meta">
+              <div class="name">text-primary</div>
+              <div class="hex">#E8ECF1</div>
+              <div class="usage">主文字 · 对比度 ≈14.5:1</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #9aa7b4"></div>
+            <div class="meta">
+              <div class="name">text-secondary</div>
+              <div class="hex">#9AA7B4</div>
+              <div class="usage">次要说明 · ≈7.2:1</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #788290"></div>
+            <div class="meta">
+              <div class="name">text-tertiary</div>
+              <div class="hex">#788290</div>
+              <div class="usage">占位符、时间戳 · 4.5:1</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #1a1206"></div>
+            <div class="meta">
+              <div class="name">text-on-accent</div>
+              <div class="hex">#1A1206</div>
+              <div class="usage">琥珀底上的文字</div>
+            </div>
+          </div>
+        </div>
+
+        <h3>强调与语义</h3>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="chip" style="background: #fa8c16"></div>
+            <div class="meta">
+              <div class="name">accent</div>
+              <div class="hex">#FA8C16</div>
+              <div class="usage">主按钮、激活填充</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #ffb75c"></div>
+            <div class="meta">
+              <div class="name">accent-text</div>
+              <div class="hex">#FFB75C</div>
+              <div class="usage">链接、文字强调 · ≈9:1</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #4cc38a"></div>
+            <div class="meta">
+              <div class="name">success</div>
+              <div class="hex">#4CC38A</div>
+              <div class="usage">成功反馈</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #f2555a"></div>
+            <div class="meta">
+              <div class="name">error</div>
+              <div class="hex">#F2555A</div>
+              <div class="usage">错误反馈</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #5aa9ff"></div>
+            <div class="meta">
+              <div class="name">info</div>
+              <div class="hex">#5AA9FF</div>
+              <div class="usage">信息提示</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #f0c040"></div>
+            <div class="meta">
+              <div class="name">warning</div>
+              <div class="hex">#F0C040</div>
+              <div class="usage">警告提示</div>
+            </div>
+          </div>
+        </div>
+
+        <h3>工具专属色（内容带色，借自 Riot Client）</h3>
+        <div class="swatch-grid">
+          <div class="swatch">
+            <div class="chip" style="background: #3ec6e0"></div>
+            <div class="meta">
+              <div class="name">tool-json</div>
+              <div class="hex">#3EC6E0</div>
+              <div class="usage">JSON 格式化 · 青</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #a78bfa"></div>
+            <div class="meta">
+              <div class="name">tool-color</div>
+              <div class="hex">#A78BFA</div>
+              <div class="usage">颜色转换 · 紫</div>
+            </div>
+          </div>
+          <div class="swatch">
+            <div class="chip" style="background: #e879c6"></div>
+            <div class="meta">
+              <div class="name">tool-time</div>
+              <div class="hex">#E879C6</div>
+              <div class="usage">时间戳转换 · 洋红</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 字体 -->
+      <section class="section">
+        <h2>字体与排版</h2>
+        <p class="desc">
+          一套无衬线走 UI 与中文正文，JetBrains Mono 走代码与数据。字号阶梯 12 / 14 / 16 / 20 / 24 / 32 /
+          44，一律左对齐。
+        </p>
+
+        <div class="type-row">
+          <span class="size">32 · 页面标题</span
+          ><span class="sample" style="font-size: 32px; font-weight: 600">JSON 格式化工具</span>
+        </div>
+        <div class="type-row">
+          <span class="size">24 · 区块标题</span
+          ><span class="sample" style="font-size: 24px; font-weight: 600">最近的文章</span>
+        </div>
+        <div class="type-row">
+          <span class="size">20 · 小标题</span
+          ><span class="sample" style="font-size: 20px; font-weight: 600">使用说明</span>
+        </div>
+        <div class="type-row">
+          <span class="size">16 · 文章正文</span
+          ><span class="sample" style="font-size: 16px">把一段压缩过的 JSON 粘贴进来，一键还原成可读的树形结构。</span>
+        </div>
+        <div class="type-row">
+          <span class="size">14 · UI 正文</span
+          ><span class="sample" style="font-size: 14px">支持缩进宽度、键排序与 Unicode 转义。</span>
+        </div>
+        <div class="type-row">
+          <span class="size">12 · 辅助说明</span
+          ><span class="sample" style="font-size: 12px; color: var(--text-secondary)"
+            >数据仅在浏览器本地处理，不会上传。</span
+          >
+        </div>
+
+        <div class="mono-sample">
+          <span class="punc">{</span> <span class="key">"name"</span><span class="punc">:</span>
+          <span class="str">"lol-f"</span><span class="punc">,</span> <span class="key">"indent"</span
+          ><span class="punc">:</span> <span class="num">2</span><span class="punc">,</span>
+          <span class="key">"sorted"</span><span class="punc">:</span> <span class="num">true</span>
+          <span class="punc">}</span>
+        </div>
+      </section>
+
+      <!-- 间距圆角 -->
+      <section class="section">
+        <h2>间距 · 圆角 · 阴影</h2>
+        <p class="desc">
+          间距走 4px 基栅，组件内部用 8–16，区块之间用 32–48。圆角按组件层级取 4 / 8 / 12。阴影仅弹层使用。
+        </p>
+
+        <div class="space-row">
+          <span class="label">4</span>
+          <div class="bar" style="width: 4px"></div>
+        </div>
+        <div class="space-row">
+          <span class="label">8</span>
+          <div class="bar" style="width: 8px"></div>
+        </div>
+        <div class="space-row">
+          <span class="label">12</span>
+          <div class="bar" style="width: 12px"></div>
+        </div>
+        <div class="space-row">
+          <span class="label">16</span>
+          <div class="bar" style="width: 16px"></div>
+        </div>
+        <div class="space-row">
+          <span class="label">24</span>
+          <div class="bar" style="width: 24px"></div>
+        </div>
+        <div class="space-row">
+          <span class="label">32</span>
+          <div class="bar" style="width: 32px"></div>
+        </div>
+        <div class="space-row">
+          <span class="label">48</span>
+          <div class="bar" style="width: 48px"></div>
+        </div>
+        <div class="space-row">
+          <span class="label">64</span>
+          <div class="bar" style="width: 64px"></div>
+        </div>
+      </section>
+
+      <!-- 组件 -->
+      <section class="section">
+        <h2>组件</h2>
+        <p class="desc">琥珀只给可交互与激活态。focus 用 2px 琥珀描边，不用外发光。</p>
+
+        <div class="demo-panel">
+          <p class="panel-title">按钮</p>
+          <button class="btn btn-primary">格式化</button>
+          <button class="btn btn-ghost">清空</button>
+          <button class="btn btn-text">查看示例</button>
+          <button class="btn" disabled>格式化</button>
+        </div>
+
+        <div class="demo-panel">
+          <p class="panel-title">导航（延续现有 .active 用法：琥珀字 + 600 字重 + 2px 下划线）</p>
+          <nav class="nav-demo">
+            <a href="#" class="active">工具</a>
+            <a href="#">博客</a>
+            <a href="#">关于</a>
+          </nav>
+        </div>
+
+        <div class="demo-panel">
+          <p class="panel-title">输入框（可点击体验 focus 态）</p>
+          <input class="input-demo" placeholder='粘贴 JSON，例如 {"a":1}' />
+        </div>
+
+        <div class="demo-panel">
+          <p class="panel-title">标签（琥珀 tag 仅用于可交互的筛选态；状态表达归语义色）</p>
+          <span class="tag tag-accent">筛选中：常用</span>
+          <span class="tag tag-success">校验通过</span>
+          <span class="tag tag-error">格式错误</span>
+        </div>
+
+        <div class="demo-panel">
+          <p class="panel-title">列表与选中态（数据级选中归琥珀浅底；路由级选中见下方工具卡片墙）</p>
+          <div class="list-demo">
+            <div class="row selected">
+              <span>为什么我选择暗色作为默认主题</span><span class="meta">2026-10-12</span>
+            </div>
+            <div class="row"><span>JSON 格式化工具的实现思路</span><span class="meta">2026-09-28</span></div>
+            <div class="row"><span>CSS 变量与 antd token 的双轨制</span><span class="meta">2026-09-15</span></div>
+          </div>
+        </div>
+
+        <div class="demo-panel">
+          <p class="panel-title">提示与错误（不道歉、不含糊，说明原因和修法）</p>
+          <div class="alert alert-error"><strong>第 3 行缺少逗号。</strong>在 "indent": 2 之后补上逗号再试。</div>
+          <div class="alert alert-info"><strong>数据仅在本地处理。</strong>粘贴的内容不会离开浏览器。</div>
+        </div>
+
+        <div class="demo-panel">
+          <p class="panel-title">弹层（唯一使用阴影的层级）</p>
+          <div class="overlay-demo">
+            <h4>清空输入？</h4>
+            <p>当前编辑器中的内容将被移除，此操作不可撤销。</p>
+            <button class="btn btn-primary">清空</button>
+            <button class="btn btn-ghost">取消</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 工具卡片墙 -->
+      <section class="section">
+        <h2>工具卡片墙</h2>
+        <p class="desc">
+          借 Riot Client 的 tile
+          结构：封面区放工具符号，底部状态条用该工具的专属色。专属色只管身份——卡片里的按钮、链接仍然是琥珀。
+        </p>
+
+        <div class="tile-wall">
+          <div class="tile tile-json">
+            <div class="cover">{ }</div>
+            <div class="strip">已上线</div>
+            <div class="label"><span class="dot"></span><span class="name">JSON 格式化</span></div>
+          </div>
+          <div class="tile tile-color">
+            <div class="cover">#A78BFA</div>
+            <div class="strip">已上线</div>
+            <div class="label"><span class="dot"></span><span class="name">颜色转换</span></div>
+          </div>
+          <div class="tile tile-time">
+            <div class="cover">1735689600</div>
+            <div class="strip">规划中</div>
+            <div class="label"><span class="dot"></span><span class="name">时间戳转换</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 页面示意 -->
+      <section class="section">
+        <h2>页面示意：工具页</h2>
+        <p class="desc">
+          全宽工作台布局。侧栏当前工具用专属色浅底（路由级选中），操作按钮仍是琥珀（系统级交互）——两种选中色各司其职。
+        </p>
+
+        <div class="page-mock">
+          <div class="mock-nav">
+            <span class="logo">lol-f</span>
+            <span class="on">工具</span><span>博客</span><span>关于</span>
+          </div>
+          <div class="mock-body">
+            <div class="mock-side">
+              <div class="on">JSON 格式化</div>
+              <div>颜色转换</div>
+              <div>时间戳转换</div>
+            </div>
+            <div class="mock-main">
+              <div class="mock-editor">{ "name": "lol-f", "indent": 2 }</div>
+              <div style="margin-top: 16px">
+                <button class="btn btn-primary">格式化</button>
+                <button class="btn btn-ghost">清空</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer">
+        lol-f 暗色 UI 规范 v1 · 令牌见 src/static/styles/theme.less · 接入见 docs/design/ui-spec.md
+      </div>
+    </div>
+  </body>
+</html>
