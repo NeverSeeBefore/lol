@@ -1,7 +1,12 @@
 import { useEffect, useRef } from 'react';
-import { EditorState } from '@codemirror/state';
+import { Compartment, EditorState, Extension } from '@codemirror/state';
 import {
+  Decoration,
+  DecorationSet,
   EditorView,
+  MatchDecorator,
+  ViewPlugin,
+  ViewUpdate,
   keymap,
   lineNumbers,
   highlightActiveLine,
@@ -53,6 +58,34 @@ export interface CodeEditorProps {
   placeholder?: string;
   /** 语言扩展，仅挂载时读取（编辑器实例只创建一次）；默认 'json' 保持既有行为 */
   language?: 'json' | 'text';
+  /**
+   * 实时匹配高亮：对文档中匹配该正则的片段加 `.cm-live-match` 标记（样式由调用方定义）。
+   * 必须带 `g` flag（MatchDecorator 要求）；调用方须保证正则不匹配空串（否则跳过高亮）。
+   */
+  highlightRegex?: RegExp | null;
+}
+
+/** 匹配高亮插件：MatchDecorator 只计算可视区间，正则变更经 Compartment 重配置 */
+function buildHighlight(regex: RegExp | null | undefined): Extension {
+  if (!regex) return [];
+  const decorator = new MatchDecorator({
+    regexp: regex,
+    decoration: Decoration.mark({ class: 'cm-live-match' }),
+  });
+  return ViewPlugin.fromClass(
+    class {
+      decorations: DecorationSet;
+
+      constructor(view: EditorView) {
+        this.decorations = decorator.createDeco(view);
+      }
+
+      update(update: ViewUpdate) {
+        this.decorations = decorator.updateDeco(update, this.decorations);
+      }
+    },
+    { decorations: (v) => v.decorations },
+  );
 }
 
 /**
@@ -66,16 +99,23 @@ export default function CodeEditor({
   lint,
   placeholder,
   language = 'json',
+  highlightRegex = null,
 }: CodeEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
+  const highlightCompartmentRef = useRef<Compartment | null>(null);
   const onChangeRef = useRef(onChange);
   onChangeRef.current = onChange;
   const lintRef = useRef(lint);
   lintRef.current = lint;
+  const highlightRegexRef = useRef(highlightRegex);
+  highlightRegexRef.current = highlightRegex;
 
   useEffect(() => {
     if (!containerRef.current) return;
+
+    const highlightCompartment = new Compartment();
+    highlightCompartmentRef.current = highlightCompartment;
 
     const extensions = [
       lineNumbers(),
@@ -93,6 +133,7 @@ export default function CodeEditor({
         if (update.docChanged) onChangeRef.current?.(update.state.doc.toString());
       }),
       ...(lintRef.current ? [linter((view) => lintRef.current?.(view.state.doc.toString()) ?? []), lintGutter()] : []),
+      highlightCompartment.of(buildHighlight(highlightRegexRef.current)),
       ...(placeholder ? [cmPlaceholder(placeholder)] : []),
     ];
 
@@ -105,6 +146,7 @@ export default function CodeEditor({
     return () => {
       view.destroy();
       viewRef.current = null;
+      highlightCompartmentRef.current = null;
     };
     // 编辑器实例只创建一次；value/lint 的变更由下方 effect 同步
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,6 +165,15 @@ export default function CodeEditor({
     const view = viewRef.current;
     if (view && lint) forceLinting(view);
   }, [lint]);
+
+  // 高亮正则变化时经 Compartment 重配置（reconfigure 空扩展等价于移除高亮）
+  useEffect(() => {
+    const view = viewRef.current;
+    const compartment = highlightCompartmentRef.current;
+    if (view && compartment) {
+      view.dispatch({ effects: compartment.reconfigure(buildHighlight(highlightRegex)) });
+    }
+  }, [highlightRegex]);
 
   return <div className={styles.editor} ref={containerRef} />;
 }

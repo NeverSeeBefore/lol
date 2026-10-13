@@ -1,0 +1,102 @@
+.wrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow: auto;
+  padding: 8px;
+}
+
+/* antd <App> 会在 .wrap 外包一层 .ant-app，让它也参与 flex 高度链 */
+
+:global(.ant-app) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.title {
+  color: var(--tool-regex); // 工具专属色：页面标题
+  flex: none;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.pattern-row {
+  align-items: center;
+  display: flex;
+  flex: none;
+  gap: 8px;
+}
+
+.slash {
+  color: var(--text-tertiary);
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 16px;
+}
+
+.pattern-input {
+  flex: 1;
+  font-family: var(--font-mono);
+  min-width: 0;
+}
+
+.flags {
+  flex: none;
+  white-space: nowrap;
+}
+
+.templates {
+  align-items: center;
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.template {
+  cursor: pointer;
+}
+
+.note {
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+.pane-title {
+  flex: none;
+  font-weight: 600;
+  padding: 4px 0;
+}
+
+.editor {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  flex: 1;
+  min-height: 160px;
+  overflow: hidden;
+}
+
+.statusbar {
+  color: var(--text-tertiary);
+  flex: none;
+  font-size: 12px;
+}
+
+.invalid {
+  color: var(--error);
+}
+
+.table {
+  flex: none;
+}
+
+/* 匹配高亮：工具专属色 12% 透明度底（CodeEditor 只加类名，颜色归工具） */
+
+:global(.cm-live-match) {
+  background-color: var(--tool-regex-bg);
+  border-radius: var(--radius-sm);
+}

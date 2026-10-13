@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import Base64UrlCodec from './Base64UrlCodec';
 import ColorConverter from './ColorConverter';
 import JsonFormatter from './JsonFormatter';
+import RegexTester from './RegexTester';
 import TimestampConverter from './TimestampConverter';
 
 export interface ToolItem {
@@ -36,5 +37,10 @@ export const tools: ToolItem[] = [
     name: 'Base64/URL',
     path: 'codec',
     element: <Base64UrlCodec />,
+  },
+  {
+    name: '正则测试',
+    path: 'regex',
+    element: <RegexTester />,
   },
 ];
