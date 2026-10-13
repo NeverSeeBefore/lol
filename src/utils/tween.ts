@@ -1,6 +1,3 @@
-/* eslint-disable no-return-assign */
-/* eslint-disable no-cond-assign */
-
 // 缓动函数
 // https://www.cnblogs.com/brainworld/p/7240564.html
 export const tween = {
@@ -558,7 +555,7 @@ export const tweenDotObjDemo = {
   ],
 };
 // generate an array of tween;
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 // function generateDotsOfTween(step = 0.01, fix = 2) {
 //   const funArr = Object.keys(tween);
 //   const obj: Record<string, number[]> = {};

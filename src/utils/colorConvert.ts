@@ -1,5 +1,3 @@
-/* eslint-disable no-bitwise */
-/* eslint-disable unicorn/prefer-switch */
 // https://blog.csdn.net/johnsuna/article/details/120226687
 
 // RGB --> HSL https://blog.csdn.net/qq_36984465/article/details/109715123

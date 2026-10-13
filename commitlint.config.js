@@ -1,4 +1,5 @@
-module.exports = {
+/** @type {import('@commitlint/types').UserConfig} */
+export default {
   extends: ['@commitlint/config-conventional'],
   rules: {
     'type-enum': [
@@ -10,7 +11,7 @@ module.exports = {
 };
 
 /**
- * [build ]       改变了build工具 如 webpack
+ * [build: ]      改变了build工具
  * [ci: ]         持续集成新增
  * [chore: ]      构建过程或辅助工具的变动
  * [feat: ]       新功能

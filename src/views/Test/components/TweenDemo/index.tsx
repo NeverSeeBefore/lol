@@ -25,7 +25,7 @@ function TweenDemo() {
         ctx.translate(0, 50);
         ctx.moveTo(0, 0);
         ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--page-font-color') || 'white';
-        // eslint-disable-next-line prefer-destructuring
+
         const length = tweenDotObjDemo[funName].length;
         const step = canvasSightWidth / length;
         for (let index = 0; index < length; index++) {

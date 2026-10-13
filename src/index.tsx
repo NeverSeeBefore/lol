@@ -6,12 +6,7 @@ import { store } from 'Src/store';
 import 'Static/styles/global.less';
 import App from './app';
 
-const container = document.createElement('div');
-container.style.width = '100%';
-container.style.height = '100%';
-document.body.append(container);
-container.id = 'root';
-const root = createRoot(container); // createRoot(container!) if you use TypeScript
+const root = createRoot(document.getElementById('root')!);
 root.render(
   <BrowserRouter>
     <Provider store={store}>

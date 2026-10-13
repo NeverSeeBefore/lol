@@ -1,47 +1,31 @@
-# lol-b
+# lol-f
 
-## 安装钩子
+个人前端项目：博客 + 前端工具集（JSON 格式化、格式转换器等，持续添加中）。
 
-- pre-commit
-npx husky install
-npm run prepare
-npx husky add .husky/pre-commit "npx lint-staged"
-<!-- git add .husky/pre-commit -->
+## 技术栈
 
-- commit-msg
-  https://github.com/conventional-changelog/commitlint
+- Vite 8 + React 19 + TypeScript 5
+- antd 6 + @ant-design/icons
+- react-router 7 + Redux Toolkit 2 + react-redux 9
+- less（CSS Modules）
 
-1.  npx husky install
-2.
+## 常用命令
 
-```js
-cat <<EEE > .husky/commit-msg
-#!/bin/sh
-. "\$(dirname "\$0")/_/husky.sh"
-
-npx --no -- commitlint --edit "\${1}"
-EEE
+```bash
+pnpm install     # 安装依赖
+pnpm dev         # 启动开发服务器
+pnpm build       # 类型检查 + 生产构建
+pnpm preview     # 预览构建产物
+pnpm lint        # eslint + stylelint
+pnpm changelog   # 生成 CHANGELOG
 ```
 
-3.  chmod a+x .husky/commit-msg
+## 提交规范
 
-## help
+遵循 [Conventional Commits](https://www.conventionalcommits.org/)，由 husky + commitlint 强制校验：
 
-- eslintrc debug
-  npx eslint --debug /Users/chenxiaoxu/Desktop/personal/lol/.eslintrc.js
+- `feat` 新功能 / `fix` 修复 bug / `docs` 文档 / `style` 代码格式
+- `refactor` 重构 / `perf` 性能优化 / `test` 测试 / `build` 构建工具
+- `ci` 持续集成 / `chore` 辅助工具变动 / `revert` 撤销 / `anno` 注释
 
-## package
-
-eslint-plugin-prettier：Runs Prettier as an ESLint rule and reports differences as individual ESLint issues.
-eslint-config-prettier：Turns off all rules that are unnecessary or might conflict with [Prettier].(extends: [..., prettier])
-
-- https://juejin.cn/post/7101688098781659172
-  react-redux
-  @reduxjs/toolkit： Redux Toolkit 是官方推荐的编写 Redux 逻辑的方法。 它包含我们对于构建 Redux 应用程序必不可少的包和函数
-  redux-devtools: redux 的开发工具
-
-## todo
-
-urlparse
-real-ip
-color-transform
+提交前 lint-staged 会自动执行 eslint、stylelint 和 prettier。

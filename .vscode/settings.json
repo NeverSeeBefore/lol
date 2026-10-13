@@ -3,7 +3,7 @@
   "search.exclude": {
     "**/node_modules": true,
     "dist": true,
-    "yarn.lock": true
+    "pnpm-lock.yaml": true
   },
   "editor.formatOnSave": true,
   "[javascript]": {
