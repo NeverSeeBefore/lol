@@ -24,7 +24,7 @@ function TweenDemo() {
         ctx.beginPath();
         ctx.translate(0, 50);
         ctx.moveTo(0, 0);
-        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--page-font-color') || 'white';
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-primary') || 'white';
 
         const length = tweenDotObjDemo[funName].length;
         const step = canvasSightWidth / length;

@@ -1,27 +1,44 @@
+@import url('./theme.less');
+
 :root {
   --grid-gap: 15px;
-  --dark-deep: #121212;
-  --dark-normal: #1c1c1c;
-  --white-normal: #fff;
-  --page-bg-color: var(--dark-normal);
-  --page-font-color: var(--white-normal);
+  // 旧变量别名：保留一个版本周期后删除（见 docs/design/ui-spec.md §7）
+  --dark-deep: var(--bg-base);
+  --dark-normal: var(--bg-base);
+  --white-normal: var(--text-primary);
+  --page-bg-color: var(--bg-base);
+  --page-font-color: var(--text-primary);
+}
+
+html {
+  color-scheme: dark;
 }
 
 html,
 body {
-  background-color: var(--page-bg-color);
+  background-color: var(--bg-base);
   box-sizing: border-box;
-  color: var(--page-font-color);
+  color: var(--text-primary);
   display: flex;
   flex: 1;
+  font-family: var(--font-sans);
   height: 100vh;
   margin: 0;
   padding: 0;
   width: 100vw;
 }
 
+::selection {
+  background-color: var(--selection-bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 .useless {
-  color: #ddd;
+  color: var(--text-tertiary);
 }
 
 #root {

@@ -1,8 +1,22 @@
 .nav-wrap {
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  gap: var(--space-5);
+  padding: var(--space-3) 0;
   width: 100%;
 
   a {
-    font-size: 20px;
+    color: var(--text-secondary);
+    font-size: 15px;
     text-decoration: none;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+
+    &.active {
+      color: var(--accent-text);
+      font-weight: 600;
+    }
   }
 }

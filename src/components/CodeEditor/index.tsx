@@ -10,9 +10,39 @@ import {
 } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
 import { json } from '@codemirror/lang-json';
-import { defaultHighlightStyle, syntaxHighlighting } from '@codemirror/language';
+import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { Diagnostic, forceLinting, lintGutter, linter } from '@codemirror/lint';
+import { tags } from '@lezer/highlight';
 import styles from './index.module.less';
+
+// 暗色主题：色值引用全局令牌（docs/design/ui-spec.md §5 代码块条目）
+const darkTheme = EditorView.theme(
+  {
+    '&': {
+      backgroundColor: 'var(--bg-raised)',
+      color: 'var(--text-primary)',
+      height: '100%',
+    },
+    '&.cm-focused': { outline: 'none' }, // 焦点描边由全局 :focus-visible 统一表达
+    '.cm-activeLine': { backgroundColor: 'var(--bg-hover)' },
+    '.cm-activeLineGutter': { backgroundColor: 'var(--bg-hover)' },
+    '.cm-content': { caretColor: 'var(--accent-text)', fontFamily: 'var(--font-mono)' },
+    '.cm-cursor': { borderLeftColor: 'var(--accent-text)' },
+    '.cm-gutters': {
+      backgroundColor: 'var(--bg-raised)',
+      border: 'none',
+      color: 'var(--text-tertiary)',
+    },
+  },
+  { dark: true },
+);
+
+// 语法着色：专用 code-token 色板，不挪用语义色
+const darkHighlight = HighlightStyle.define([
+  { tag: tags.propertyName, color: 'var(--code-key)' },
+  { tag: tags.string, color: 'var(--code-string)' },
+  { tag: [tags.number, tags.bool, tags.null], color: 'var(--code-number)' },
+]);
 
 export interface CodeEditorProps {
   value: string;
@@ -45,7 +75,8 @@ export default function CodeEditor({ value, onChange, readOnly = false, lint, pl
       history(),
       keymap.of([...defaultKeymap, ...historyKeymap, indentWithTab]),
       json(),
-      syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+      darkTheme,
+      syntaxHighlighting(darkHighlight, { fallback: true }),
       EditorView.lineWrapping,
       EditorState.readOnly.of(readOnly),
       EditorView.editable.of(!readOnly),
