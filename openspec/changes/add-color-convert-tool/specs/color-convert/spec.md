@@ -8,7 +8,7 @@
 
 ### Requirement: 取色板选色
 
-系统 SHALL 提供 HSV 取色板（色相条 + 饱和明度面板 + 透明度条），用户拖拽选色后，四种格式的读数 MUST 实时联动更新。取色板组件 MUST 支持可选的 `defaultValue`/`onChange` 接口（`defaultValue` 仅挂载时读取，外部改色经 key 重挂载驱动），不传时维持自治行为，既有调用方（Test 页）行为不变。
+系统 SHALL 提供 HSV 取色板（色相条 + 饱和明度面板 + 透明度条），用户拖拽选色后，四种格式的读数 MUST 实时联动更新。取色板组件 MUST 支持可选的 `defaultValue`/`defaultOpacity`/`onChange` 接口（default* 仅挂载时读取，外部改色经 key 重挂载驱动），不传时维持自治行为，既有调用方（Test 页）行为不变。
 
 #### Scenario: 拖拽选色
 
@@ -73,4 +73,4 @@
 #### Scenario: 页面渲染
 
 - **WHEN** 打开 `/tools/color`
-- **THEN** 页面为暗色底，标题为紫色 `--tool-color`，主按钮为琥珀底深棕黑字，无新增硬编码色值
+- **THEN** 页面为暗色底，标题为紫色 `--tool-color`，按钮/输入框等交互元素继承琥珀系暗色令牌，无新增硬编码色值

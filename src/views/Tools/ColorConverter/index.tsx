@@ -112,7 +112,7 @@ function ColorConverterInner() {
       <div className={styles.title}>颜色转换</div>
       <div className={styles.main}>
         <div className={styles.board}>
-          <ColorBoard key={boardKey} defaultValue={boardHex} onChange={handleBoardChange} />
+          <ColorBoard key={boardKey} defaultValue={boardHex} defaultOpacity={color.a} onChange={handleBoardChange} />
         </div>
         <div className={styles.panel}>
           <FormatRow label="HEX" text={formatHex(color)} parse={parseHex} onApply={applyRgb} />

@@ -26,6 +26,8 @@ interface ColorBoardProps {
    * 外部要改色请用 key 重挂载。不传时组件自治（向后兼容，默认红色）
    */
   defaultValue?: string;
+  /** 初始透明度（0-1），同样仅挂载时读取；不传默认为 1 */
+  defaultOpacity?: number;
   /** 拖拽滑块导致颜色变化时触发（挂载首帧不触发） */
   onChange?: (color: BoardColor) => void;
 }
@@ -38,7 +40,7 @@ const parseHexToRgb = (hex: string): number[] | null => {
   return [0, 2, 4].map((i) => Number.parseInt(full.slice(i, i + 2), 16));
 };
 
-export default function ColorBorad({ defaultValue, onChange }: ColorBoardProps) {
+export default function ColorBorad({ defaultValue, defaultOpacity, onChange }: ColorBoardProps) {
   const width = 200;
 
   // 初始颜色：挂载时解析一次，派生出各状态与滑块初始位置
@@ -50,16 +52,19 @@ export default function ColorBorad({ defaultValue, onChange }: ColorBoardProps) 
     const saturation = Math.round(s) / 100;
     const value = Math.round(v) / 100;
     const rgb = colorConvert.hsvCCrgb([hue, saturation * 100, value * 100]);
+    const opacity = Math.min(1, Math.max(0, defaultOpacity ?? 1));
     return {
       hue,
       saturation,
       value,
+      opacity,
       rgb,
       hsl: colorConvert.hsvCChsl([hue, saturation * 100, value * 100]),
       hex: colorConvert.rgbCChex(rgb),
       hueThumbX: (h / 360) * width,
       satThumbX: (s / 100) * width,
       valThumbY: (1 - v / 100) * width,
+      opacityThumbX: opacity * width,
     };
   });
 
@@ -67,7 +72,7 @@ export default function ColorBorad({ defaultValue, onChange }: ColorBoardProps) 
   const [hue, setHue] = useState(initial.hue);
   const [saturation, setSaturation] = useState(initial.saturation);
   const [value, setValue] = useState(initial.value);
-  const [opacity, setOpacity] = useState(1);
+  const [opacity, setOpacity] = useState(initial.opacity);
   const [rgb, setRgb] = useState(initial.rgb);
   const [hsl, setHsl] = useState(initial.hsl);
   const [hex, setHex] = useState(initial.hex);
@@ -86,7 +91,7 @@ export default function ColorBorad({ defaultValue, onChange }: ColorBoardProps) 
   const [opacityThumbPosition, opacityThumbMouseDown] = useThumb({
     minX: 0,
     maxX: width,
-    initX: width,
+    initX: initial.opacityThumbX,
   });
   const [satValThumbPosition, satValThumbMouseDown] = useThumb({
     minX: 0,

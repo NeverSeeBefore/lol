@@ -63,6 +63,7 @@
 
 - [取色板 h/s/v 量化导致外部写入的颜色轻微吸附（±1/255）] → 工具行保持用户输入的精确值，仅取色板自身读数显示量化值；视觉上不可分辨
 - [拖拽中 bump key 会重挂载取色板、打断拖拽] → 仅在手动输入反填时 bump，拖拽路径不动 key
+- [key 重挂载会重置取色板内部 UI 状态] → 已知代价：用户在取色板页脚切换的读数格式（colorType）会在手动输入反填后重置回 HSV；颜色与透明度经 defaultValue/defaultOpacity 透传不受影响，格式切换属次要偏好，接受
 - [`Utils/colorConvert` 旧函数（rgb2hsl 等 0–1 风格）与 CC 系列混用出错] → 适配层只用 CC 系列 + 自实现 hex 解析，旧函数不碰
 - [运行时读 `--bg-base` 时机过早拿到空值] → 模块级不读，在组件挂载后用 useMemo/effect 读，带 `#131417` 回退
 - [stylelint 字母序/prettier 冲突] → 提交前跑 `pnpm lint` 与 lint-staged，--fix 整理
