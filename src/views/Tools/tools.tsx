@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import ColorConverter from './ColorConverter';
 import JsonFormatter from './JsonFormatter';
 
 export interface ToolItem {
@@ -18,5 +19,10 @@ export const tools: ToolItem[] = [
     name: 'JSON 格式化',
     path: 'json',
     element: <JsonFormatter />,
+  },
+  {
+    name: '颜色转换',
+    path: 'color',
+    element: <ColorConverter />,
   },
 ];
