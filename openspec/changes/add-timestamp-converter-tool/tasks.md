@@ -6,7 +6,7 @@
 - [x] 1.2 `formatDateTime(date, timeZone)`：Intl.DateTimeFormat formatToParts 拼 `YYYY-MM-DD HH:mm:ss`，年份补零 4 位
 - [x] 1.3 `utcOffsetLabel()`：getTimezoneOffset 换算 `UTC±H[:mm]` 标注
 - [x] 1.4 `parseDateTime`：正则提取 + 字段范围校验 + 本地构造 + 回读校验（拦截 2 月 30 日），失败返回错误原因
-- [x] 1.5 `batchReplace`：`/(?<![\d.])(\d{13}|\d{10})(?![\d.])/g` 就地替换，返回替换后文本与计数，Invalid Date 保留原文
+- [x] 1.5 `batchReplace`：`/(?<![\d.-])(\d{13}|\d{10})(?![\d.])/g` 就地替换（lookbehind 含负号，带负号数字串整串保留），返回替换后文本与计数，Invalid Date 保留原文
 
 ## 2. 工具页面
 

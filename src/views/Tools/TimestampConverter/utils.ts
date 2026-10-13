@@ -138,12 +138,13 @@ export interface BatchResult {
 
 /**
  * 批量模式：就地替换文本中的时间戳为本地可读时间。
- * 匹配 13 位（毫秒）与 10 位（秒）纯数字串；前后负向断言排除更长数字串与小数。
+ * 匹配 13 位（毫秒）与 10 位（秒）纯数字串；前后负向断言排除更长数字串、小数与负号
+ * （排除负号避免 `neg=-1735689600` 替换数字部分后留下悬空负号）。
  * 值域天然落在 2001–2286 年；单条 Invalid Date 时保留原文。
  */
 export function batchReplace(input: string): BatchResult {
   let count = 0;
-  const text = input.replace(/(?<![\d.])(\d{13}|\d{10})(?![\d.])/g, (raw) => {
+  const text = input.replace(/(?<![\d.-])(\d{13}|\d{10})(?![\d.])/g, (raw) => {
     const parsed = parseTimestamp(raw);
     if (!parsed.ok) return raw;
     count += 1;
