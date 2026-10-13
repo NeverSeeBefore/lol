@@ -1,0 +1,27 @@
+.tools-wrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+}
+
+.tools-content {
+  display: flex; /* 工具页根节点用 flex:1 撑满（不用 height:100%，flex 项内百分比高度不可靠） */
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.tools-nav {
+  flex: none;
+  padding: 8px 0;
+  width: 100%;
+}
+
+.active {
+  color: #fa8c16;
+  font-weight: 600;
+}

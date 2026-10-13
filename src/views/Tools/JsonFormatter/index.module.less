@@ -1,0 +1,61 @@
+.wrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+  padding: 8px;
+}
+
+/* antd <App> 会在 .wrap 外包一层 .ant-app，让它也参与 flex 高度链 */
+
+:global(.ant-app) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.toolbar {
+  flex: none;
+}
+
+.panes {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  min-height: 0;
+}
+
+.pane {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pane-title {
+  flex: none;
+  font-weight: 600;
+  padding: 4px 0;
+}
+
+.pane-editor {
+  flex: 1;
+  min-height: 0;
+}
+
+.statusbar {
+  color: #888;
+  flex: none;
+  font-size: 12px;
+}
+
+.valid {
+  color: #52c41a;
+}
+
+.invalid {
+  color: #ff4d4f;
+}

@@ -15,6 +15,7 @@ export default {
     'no-descending-specificity': null,
     'no-invalid-double-slash-comments': null,
     'rule-empty-line-before': 'always',
+    'selector-pseudo-class-no-unknown': [true, { ignorePseudoClasses: ['global'] }], // CSS Modules :global
   },
   ignoreFiles: ['node_modules/**/*', 'dist/**/*'],
 };

@@ -1,0 +1,22 @@
+import { ReactNode } from 'react';
+import JsonFormatter from './JsonFormatter';
+
+export interface ToolItem {
+  /** 导航显示名 */
+  name: string;
+  /** 子路由路径（相对 /tools） */
+  path: string;
+  element: ReactNode;
+}
+
+/**
+ * 工具清单：新增工具时在此数组加一项即可，
+ * 子导航（Tools/index.tsx）与路由（router/index.tsx）共用此配置。
+ */
+export const tools: ToolItem[] = [
+  {
+    name: 'JSON 格式化',
+    path: 'json',
+    element: <JsonFormatter />,
+  },
+];
