@@ -40,7 +40,7 @@
 
 ### D3: 超界与不可拟合判定——值域检查 + 拟合误差双门槛
 
-对每条曲线用 1001 点采样计算值域：`min < 0 || max > 1` → 判定「值域超出 [0,1]」（Back×3、elastic、spring、bouncePast、swing×3 等命中）；值域内但拟合误差 >0.03（bounce、easeOutBounce、wobble、pulse、blink、flicker、mirror、none、full 等）→ 判定「单个 cubic-bezier 无法表达」。两类都只输出 @keyframes，UI 提示语区分原因（前者「值域超出 [0,1]，cubic-bezier 无法表达」；后者「曲线含多次回弹/跳变，拟合误差过大」）。
+对每条曲线用 1001 点采样计算值域：`min < 0 || max > 1` → 判定「值域超出 [0,1]」（Back×3、elastic、spring、bouncePast、swing×3 等命中）；值域内但拟合误差 >0.03（bounce、easeOutBounce、wobble、pulse、blink、flicker、mirror、none、full 等）→ 判定「单个 cubic-bezier 无法表达」。两类都只输出 @keyframes，UI 提示语区分原因（前者「值域超出 [0,1]，按约定不输出 cubic-bezier」；后者「曲线含多次回弹/跳变，拟合误差过大」）。
 
 ### D4: @keyframes 生成
 
@@ -59,7 +59,7 @@
 
 ## Risks / Trade-offs
 
-- [Back/Elastic/Bounce 类曲线 cubic-bezier 无法表达（已知技术边界）] → 按 D3 双门槛判定，一律给 @keyframes 兜底并在 UI 明确提示原因；CSS 虽允许 y 值超界，但按任务约定对此类曲线不输出 cubic-bezier，提示文案写清
+- [Back/Elastic/Bounce 类曲线不输出 cubic-bezier 是策略约定而非技术限制] → CSS cubic-bezier 允许 y 控制点超界（easings.net 的 easeOutBack 即超界值，本工具拟合路径也会产出超界控制点）；按任务约定对值域超 [0,1] 的曲线一律不输出 cubic-bezier（避免用户拿到与直觉不符的超界控制点），统一给 @keyframes 兜底；UI 提示语写「按本工具约定不输出 cubic-bezier」，如实表达这是约定而非能力边界
 - [坐标下降拟合陷入局部极小值] → 经典 21 条查表规避；非查表曲线有误差门槛兜底，误差大即降级 keyframes，不会输出误导性代码
 - [flicker 函数含随机性，实时动画与采样曲线不一致] → 采样点是一次性生成的快照，动画每次运行略有抖动，符合该函数语义，不做特殊处理
 - [45 个 canvas 同时绘制性能] → 88×88 小画布、101 点折线，一次性绘制，实测开销可忽略

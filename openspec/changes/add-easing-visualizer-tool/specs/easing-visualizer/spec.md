@@ -50,7 +50,7 @@
 
 ### Requirement: CSS 代码输出
 
-系统 SHALL 为当前选中曲线生成可复制的 CSS 代码：值域在 [0,1] 内的曲线 MUST 给出 `cubic-bezier()` 最小二乘拟合值（拟合误差需在可接受范围）；值域超出 [0,1] 的曲线（Back/Elastic/Bounce 类等）MUST NOT 输出 cubic-bezier，改为输出 `@keyframes` 代码并在 UI 明确提示「该曲线值域超出 [0,1]，cubic-bezier 无法表达，请使用 @keyframes」。
+系统 SHALL 为当前选中曲线生成可复制的 CSS 代码：值域在 [0,1] 内的曲线 MUST 给出 `cubic-bezier()` 最小二乘拟合值（拟合误差需在可接受范围）；值域超出 [0,1] 的曲线（Back/Elastic/Bounce 类等）MUST NOT 输出 cubic-bezier，改为输出 `@keyframes` 代码并在 UI 明确提示「该曲线值域超出 [0,1]，按约定不输出 cubic-bezier，请使用 @keyframes」。
 
 #### Scenario: 普通曲线的 cubic-bezier 输出
 
@@ -60,7 +60,7 @@
 #### Scenario: 超界曲线的 keyframes 兜底
 
 - **WHEN** 用户选中 easeOutBack（值域超出 1）
-- **THEN** 代码区只输出 `@keyframes` 代码，不出现 cubic-bezier，UI 给出「值域超出 [0,1]，cubic-bezier 无法表达」的明确提示
+- **THEN** 代码区只输出 `@keyframes` 代码，不出现 cubic-bezier，UI 给出「值域超出 [0,1]，按约定不输出 cubic-bezier」的明确提示
 
 #### Scenario: 复制代码
 

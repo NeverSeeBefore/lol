@@ -7,6 +7,8 @@ import styles from './index.module.less';
 
 const GRID_SIZE = 88;
 const DETAIL_SIZE = 240;
+/** 预览轨道内边距，与 .ball 的 left 定位一致 */
+const BALL_INSET = 8;
 
 interface CanvasPalette {
   curve: string;
@@ -138,7 +140,8 @@ function EasingVisualizerInner() {
         if (p > 1) p = 2 - p;
         const v = fn(p);
         const ratio = span === 0 ? 0.5 : (v - min) / span;
-        const range = track.clientWidth - ball.clientWidth;
+        // 量程扣除左右各 8px 内边距（.ball left: 8px），保证两端正停且不溢出
+        const range = track.clientWidth - ball.clientWidth - BALL_INSET * 2;
         ball.style.transform = `translateX(${ratio * range}px)`;
       }
       raf = requestAnimationFrame(tick);
@@ -213,7 +216,7 @@ function EasingVisualizerInner() {
           ) : (
             <div className={styles.hint}>
               {cssOutput.reason === 'out-of-range'
-                ? '该曲线值域超出 [0,1]，cubic-bezier 无法表达，请使用 @keyframes'
+                ? '该曲线值域超出 [0,1]（存在过冲/回拉），按本工具约定不输出 cubic-bezier，请使用 @keyframes 精确还原'
                 : '该曲线含多次回弹/跳变，单个 cubic-bezier 拟合误差过大，请使用 @keyframes'}
             </div>
           )}
