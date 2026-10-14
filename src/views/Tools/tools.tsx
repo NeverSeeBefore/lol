@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import Base64UrlCodec from './Base64UrlCodec';
 import ColorConverter from './ColorConverter';
+import EasingVisualizer from './EasingVisualizer';
 import JsonFormatter from './JsonFormatter';
 import RegexTester from './RegexTester';
 import TimestampConverter from './TimestampConverter';
@@ -42,5 +43,10 @@ export const tools: ToolItem[] = [
     name: '正则测试',
     path: 'regex',
     element: <RegexTester />,
+  },
+  {
+    name: '缓动曲线',
+    path: 'easing',
+    element: <EasingVisualizer />,
   },
 ];
