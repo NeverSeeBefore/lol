@@ -6,6 +6,7 @@ import JsonFormatter from './JsonFormatter';
 import JwtParser from './JwtParser';
 import RegexTester from './RegexTester';
 import TimestampConverter from './TimestampConverter';
+import YamlJsonConverter from './YamlJsonConverter';
 
 export interface ToolItem {
   /** 导航显示名 */
@@ -54,5 +55,10 @@ export const tools: ToolItem[] = [
     name: '缓动曲线',
     path: 'easing',
     element: <EasingVisualizer />,
+  },
+  {
+    name: 'YAML/JSON',
+    path: 'yaml',
+    element: <YamlJsonConverter />,
   },
 ];
