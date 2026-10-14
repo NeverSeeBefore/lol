@@ -20,8 +20,12 @@ function JwtParserInner() {
       message.warning(`${label}为空，无可复制内容`);
       return;
     }
-    await navigator.clipboard.writeText(text);
-    message.success(`已复制${label}`);
+    try {
+      await navigator.clipboard.writeText(text);
+      message.success(`已复制${label}`);
+    } catch {
+      message.error('复制失败：浏览器拒绝了剪贴板写入（需用户授权或安全上下文），请手动选择文本复制');
+    }
   };
 
   const renderSegment = (title: string, segment: SegmentResult | undefined) => (
@@ -85,7 +89,10 @@ function JwtParserInner() {
 
           <div className={styles.section}>
             <div className={styles['section-head']}>
-              <span className={styles['section-title']}>Signature</span>
+              <span className={styles['section-title']}>
+                Signature
+                <span className={styles['no-verify']}>不验证签名</span>
+              </span>
               <Button
                 disabled={!result.signature}
                 size="small"
@@ -95,7 +102,7 @@ function JwtParserInner() {
               </Button>
             </div>
             <div className={styles.signature}>{result.signature || '（签名段为空）'}</div>
-            <div className={styles.note}>仅展示原始签名段，不验证签名——解析成功不代表 token 可信</div>
+            <div className={styles.note}>仅展示原始签名段——解析成功不代表 token 可信</div>
           </div>
         </div>
       )}

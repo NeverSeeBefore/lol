@@ -77,7 +77,19 @@
 }
 
 .section-title {
+  align-items: center;
+  display: flex;
   font-weight: 600;
+  gap: 8px;
+}
+
+.no-verify {
+  background-color: rgb(240 192 64 / 12%); // --warning 12% 底（沿用 --accent-bg 的 12% 写法）
+  border-radius: var(--radius-sm);
+  color: var(--warning);
+  font-size: 12px;
+  font-weight: 400;
+  padding: 1px 6px;
 }
 
 .editor {
