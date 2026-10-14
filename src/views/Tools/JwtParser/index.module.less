@@ -1,0 +1,143 @@
+.wrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+  padding: 8px;
+}
+
+/* antd <App> 会在 .wrap 外包一层 .ant-app，让它也参与 flex 高度链 */
+
+:global(.ant-app) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.title {
+  color: var(--tool-jwt); // 工具专属色：页面标题
+  flex: none;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.privacy {
+  flex: none;
+}
+
+.input-pane {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+}
+
+.pane-title {
+  flex: none;
+  font-weight: 600;
+  padding: 4px 0;
+}
+
+.input-editor {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  height: 120px;
+  overflow: hidden;
+}
+
+.error {
+  color: var(--error);
+  flex: none;
+  font-size: 12px;
+}
+
+.results {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.section {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+}
+
+.section-head {
+  align-items: center;
+  display: flex;
+  flex: none;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+.section-title {
+  font-weight: 600;
+}
+
+.editor {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  height: 160px;
+  overflow: hidden;
+}
+
+.claims {
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  font-size: 12px;
+  gap: 4px;
+  padding: 8px 12px;
+}
+
+.claim-row {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.claim-key {
+  color: var(--tool-jwt);
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.claim-raw {
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+}
+
+.expired {
+  color: var(--error);
+}
+
+.valid {
+  color: var(--success);
+}
+
+.signature {
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  padding: 8px 12px;
+}
+
+.note {
+  color: var(--text-tertiary);
+  font-size: 12px;
+  padding-top: 4px;
+}

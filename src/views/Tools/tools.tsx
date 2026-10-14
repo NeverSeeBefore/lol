@@ -3,6 +3,7 @@ import Base64UrlCodec from './Base64UrlCodec';
 import ColorConverter from './ColorConverter';
 import EasingVisualizer from './EasingVisualizer';
 import JsonFormatter from './JsonFormatter';
+import JwtParser from './JwtParser';
 import RegexTester from './RegexTester';
 import TimestampConverter from './TimestampConverter';
 
@@ -43,6 +44,11 @@ export const tools: ToolItem[] = [
     name: '正则测试',
     path: 'regex',
     element: <RegexTester />,
+  },
+  {
+    name: 'JWT 解析',
+    path: 'jwt',
+    element: <JwtParser />,
   },
   {
     name: '缓动曲线',
