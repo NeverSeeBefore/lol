@@ -14,6 +14,14 @@ DOMPurify.addHook('uponSanitizeAttribute', (_node, data) => {
   }
 });
 
+// 预览区链接一律新标签页打开，避免点击后在当前标签跳走丢失编辑内容
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if (node.tagName === 'A') {
+    node.setAttribute('target', '_blank');
+    node.setAttribute('rel', 'noopener noreferrer');
+  }
+});
+
 /**
  * Markdown → 消毒后 HTML 的唯一入口（硬性安全要求）：
  * marked 不做任何消毒，所有输出必须经 DOMPurify 默认白名单过滤。
@@ -27,15 +35,17 @@ export function renderMarkdown(src: string): string {
   return DOMPurify.sanitize(raw as string);
 }
 
-/** 快捷插入片段定义：wrap 类包裹选区，build 类生成多行模板 */
+/** 快捷插入片段定义：wrap 类包裹选区，build 类生成模板 */
 export interface Snippet {
   label: string;
   /** 无选区时插入的占位文本 */
   placeholder: string;
   /** 选区两侧包裹标记；省略则走 build 模板插入 */
   wrap?: [string, string];
-  /** 自定义生成插入内容（块级模板自行处理换行，避免粘连上文） */
+  /** 自定义生成插入内容（不含前置换行；块级模板换行由 insertSnippet 统一处理） */
   build?: (selected: string) => string;
+  /** 块级模板：光标不在行首时先补换行，避免截断当前行 */
+  block?: boolean;
 }
 
 export const SNIPPETS: Snippet[] = [
@@ -50,18 +60,21 @@ export const SNIPPETS: Snippet[] = [
   {
     label: '代码块',
     placeholder: 'code',
-    build: (selected) => `\n\`\`\`\n${selected || 'code'}\n\`\`\`\n`,
+    block: true,
+    build: (selected) => `\`\`\`\n${selected || 'code'}\n\`\`\`\n`,
   },
   {
     label: '表格',
     placeholder: '',
-    build: () => '\n| 列1 | 列2 | 列3 |\n| --- | --- | --- |\n| 内容 | 内容 | 内容 |\n',
+    block: true,
+    build: () => '| 列1 | 列2 | 列3 |\n| --- | --- | --- |\n| 内容 | 内容 | 内容 |\n',
   },
 ];
 
 /**
  * 在编辑器光标/选区处插入 Markdown 模板：
  * 有选区时包裹（wrap 类）或嵌入模板（build 类）；无选区时插入占位文本并选中它，便于直接改字。
+ * 块级模板（代码块/表格）：光标在单行内且不在行首时，模板挪到当前行尾另起一行，不截断当前行。
  * 事务经 EditorView.dispatch 派发，CodeEditor 的 updateListener 会同步回 React state。
  */
 export function insertSnippet(view: EditorView, snippet: Snippet): void {
@@ -76,6 +89,28 @@ export function insertSnippet(view: EditorView, snippet: Snippet): void {
     inserted = `${pre}${selected || snippet.placeholder}${post}`;
   } else {
     inserted = snippet.placeholder;
+  }
+
+  // 块级模板：光标在单行内且不在行首时，模板挪到当前行尾另起一行，当前行内容不被截断
+  const line = view.state.doc.lineAt(from);
+  if (snippet.block && from !== line.from && to <= line.to) {
+    const template = '\n' + inserted;
+    view.dispatch({
+      changes: [
+        { from, to, insert: '' },
+        { from: line.to, insert: template },
+      ],
+      // 删除发生在插入点之前，插入串末尾的新位置需减去删除长度
+      selection: { anchor: line.to - (to - from) + template.length },
+      scrollIntoView: true,
+    });
+    view.focus();
+    return;
+  }
+
+  // 块级模板跨行选区或光标不在行首的兜底：补前置换行，就地替换
+  if (snippet.block && from !== line.from) {
+    inserted = '\n' + inserted;
   }
 
   // 选中新插入的占位文本（仅当原文无选区且占位非空时），否则光标落到插入内容末尾
