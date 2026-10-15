@@ -1,0 +1,194 @@
+.wrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+  padding: 8px;
+}
+
+/* antd <App> 会在 .wrap 外包一层 .ant-app，让它也参与 flex 高度链 */
+
+:global(.ant-app) {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.title {
+  color: var(--tool-diff); // 工具专属色：页面标题
+  flex: none;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.toolbar {
+  flex: none;
+}
+
+.note {
+  color: var(--text-tertiary);
+  font-size: 12px;
+}
+
+.panes {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  min-height: 0;
+}
+
+.pane {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pane-title {
+  flex: none;
+  font-weight: 600;
+  padding: 4px 0;
+}
+
+.pane-editor {
+  flex: 1;
+  min-height: 0;
+}
+
+.diff-view {
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.result {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  padding: 4px 0;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  padding: 0 8px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.row-add {
+  background-color: var(--success-bg);
+  color: var(--success);
+}
+
+.row-del {
+  background-color: var(--error-bg);
+  color: var(--error);
+}
+
+.row-mod {
+  background-color: var(--accent-bg);
+  color: var(--accent-text);
+}
+
+.line-no {
+  color: var(--text-tertiary);
+  flex: none;
+  min-width: 3em;
+  text-align: right;
+  user-select: none;
+}
+
+.sign {
+  flex: none;
+  font-weight: 600;
+  text-align: center;
+  user-select: none;
+  width: 1em;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mod-old {
+  color: var(--error);
+}
+
+.mod-new {
+  color: var(--success);
+}
+
+.mod-arrow {
+  color: var(--text-tertiary);
+}
+
+.badge {
+  border-radius: var(--radius-sm);
+  flex: none;
+  font-size: 12px;
+  padding: 0 6px;
+  user-select: none;
+}
+
+.badge-add {
+  background-color: var(--success-bg);
+  color: var(--success);
+}
+
+.badge-del {
+  background-color: var(--error-bg);
+  color: var(--error);
+}
+
+.badge-mod {
+  background-color: var(--accent-bg);
+  color: var(--accent-text);
+}
+
+.path {
+  color: var(--code-key);
+  flex: none;
+  font-weight: 600;
+}
+
+.type-changed {
+  background-color: var(--accent-bg);
+  border-radius: var(--radius-sm);
+  color: var(--accent-text);
+  flex: none;
+  font-size: 12px;
+  padding: 0 6px;
+}
+
+.result-note {
+  color: var(--text-tertiary);
+  padding: 4px 8px;
+}
+
+.result-error {
+  color: var(--error);
+  padding: 8px;
+}
+
+.empty {
+  color: var(--text-tertiary);
+  padding: 16px 8px;
+}
+
+.statusbar {
+  color: var(--text-tertiary);
+  flex: none;
+  font-size: 12px;
+}
+
+.invalid {
+  color: var(--error);
+}

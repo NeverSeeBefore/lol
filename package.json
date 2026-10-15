@@ -38,6 +38,7 @@
     "@lezer/highlight": "1.2.5",
     "@reduxjs/toolkit": "^2.13.0",
     "antd": "^6.6.6",
+    "diff": "^9.0.0",
     "json5": "^2.2.3",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",

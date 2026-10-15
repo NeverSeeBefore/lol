@@ -1,0 +1,69 @@
+# Design
+
+## Context
+
+工具集新增「文本/JSON 语义 Diff」。文本 diff 需要成熟的编辑距离算法（Myers），手写易错且边界（换行、空白、大数据退化）多，引入 `diff`（jsdiff，计划内直接依赖，pnpm 严格隔离要求显式 `pnpm add diff`）。JSON 语义 diff 无现成库满足「键序无关 + 路径化 + 类型变化标注」，递归比对逻辑简单（<100 行），自实现。全部计算在浏览器本地同步完成，无网络请求。已用 diff@9.0.0 实测确认关键行为与性能（见下）。
+
+## Decisions
+
+### Diff 算法选型论证
+
+| 方案                               | 结论     | 理由                                                                                                                                                                                |
+| ---------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **jsdiff（`diff` 包）`diffLines`** | **采用** | Myers 行级 diff 事实标准；API 返回 `{value, added, removed, count}[]` 块序列，正好支撑增/删/改配对；自带 TypeScript 类型（v9 起 bundled，无需 @types）；支持 `timeout` 兜底极端输入 |
+| 自实现 Myers/LCS                   | 弃用     | 正确实现 O(ND) Myers 含线性空间优化约 150+ 行，边界 case（末尾换行、CRLF、空文档）需逐一实测，收益为零——jsdiff 已全量覆盖且有 10 年+ 生产验证                                       |
+| 字符级 diff（`diffChars`）         | 部分采用 | 仅用于「修改」行对内的高亮（可选增强，本期不做，结果视图行级粒度已满足验收）                                                                                                        |
+
+实测（diff@9.0.0，Node 20）：10k 行 1/7 行变更 577ms；典型 2000 行 10% 变更 16ms；病态全异输入平方级退化（1000+1000 全异 137ms，2000+2000 全异 531ms，5000+5000 全异 3.4s）；`timeout` 选项超时返回 `undefined`（实测），可作兜底。
+
+### 性能阈值与降级策略（实测数据支撑）
+
+- **实时对比阈值**：两侧合计 ≤2000 行 且 ≤200_000 字符 → useMemo 派生实时对比（典型 16ms；病态全异 531ms 一次性可接受）。
+- **手动模式**：超实时阈值 → 停止实时计算，显示「对比」按钮与提示，点击后计算。1 万行场景实测 577ms。
+- **硬上限**：两侧合计 >30_000 行 或 >3MB → 拒绝计算并提示（Myers 平方退化在 3 万行病态输入下达分钟级，必须拦截）。
+- **超时兜底**：`diffLines(a, b, { timeout: 1000 })` 返回 `undefined` 时，降级为「整体替换」视图（旧文本全标删除、新文本全标新增）并提示「差异过大，已按整体替换展示」。
+- **渲染上限**：diff 结果行数 >5000 行时截断渲染，提示「仅展示前 5000 行」——纯 DOM 行（非 CodeMirror）5k 行渲染流畅，20k+ 行会造成可感卡顿。
+
+### 文本模式：增/删/改配对（utils.ts）
+
+- `computeTextDiff(oldText, newText): TextDiffResult`
+- `diffLines` 产出块序列后展开为行数组 `{type: 'same'|'add'|'del', text, oldLine?, newLine?}`（jsdiff 的 value 末行带 `\n`，split 后丢弃末尾空串）。
+- **修改配对**：遍历行序列，遇连续 `del` 段紧跟连续 `add` 段时，按 `min(delCount, addCount)` 逐行配对为 `{type: 'mod', oldText, newText, oldLine, newLine}`，剩余行保持纯增/删。统计：`+N 行`（纯 add）、`-N 行`（纯 del）、`修改 M 处`（mod 对数）。
+- 空两侧输入 → 空结果（不报错）。
+
+### JSON 模式：语义比对（utils.ts）
+
+- `computeJsonDiff(oldText, newText): JsonDiffResult`
+- 两侧各自 `JSON.parse`；失败给出「左侧/右侧 第 N 行：原因」（复用 V8 `at position N` 换算行列的既有套路，同 YamlJsonConverter 的 formatJsonError）。仅一侧为空文本时：该侧视为「空文档」，另一侧整体标为新增/删除（路径 `$`）。
+- **递归比对** `diffValue(path, a, b)`：
+  - 两侧同为纯对象：键集求并（键序无关），递归；仅左有 → 删除，仅右有 → 新增。
+  - 两侧同为数组：按下标对齐递归；尾部多余元素逐条新增/删除（数组是序相关的，不做集合匹配）。
+  - 类型不同（含对象↔数组↔标量互换）：产出一条 `modify` 且 `typeChanged: true`，不再下钻（下钻无意义且噪音大）。
+  - 标量不等：`modify`；`Object.is` 判定（NaN 视为相等）。
+- **路径格式化**：`a.b[2].c`；非常规键名（含点/空格/数字开头）降级为 `["key"]` 下标注。
+- **变更值展示**：标量直接 `JSON.stringify`；对象/数组折叠为类型摘要（`{…3 键}` / `[…5 项]`），避免巨型值刷屏。
+- 结果按路径字典序排序展示；变更条数 >2000 时截断并提示。
+- 统计：`+N 键 / -N 键 / 修改 M 处`（类型变化计入修改）。
+
+### 页面结构（index.tsx）
+
+- 复刻 YamlJsonConverter 布局：标题（`--tool-diff` 青碧）+ 工具栏（Segmented 文本/JSON + 对比按钮（仅手动模式显示）+ 交换左右 + 清空 + note 提示）+ 双栏 CodeEditor（左「旧」右「新」）+ Diff 结果视图 + 状态栏统计。
+- 结果视图为纯 DOM 渲染（非 CodeMirror）：文本模式每行 `行号 | +/-//~ | 内容` 三色着色；JSON 模式为变更列表（类型 badge + 路径 + old → new）。
+- CodeEditor 两栏均 `language` 按模式给（JSON 模式 `json`，文本模式 `text`），切换模式经 `key={mode}` 重挂载（同 YamlJsonConverter 决策）。
+- 手动模式 state：超阈值时冻结结果，点「对比」把当前输入快照存入 `manualInput` state 触发 useMemo；阈值回落实时模式自动恢复。
+- 「交换左右」：互换两个输入 state，diff 自动反向。
+
+### 颜色（全部引用 theme.less 令牌，零硬编码）
+
+- 标题 `--tool-diff`（青碧 `#84EBD0`，164°，亮层，已预分配；与同层 142° 碧绿间距 22° ≥ 20° 合规）。
+- 新增：`--success` 文字 + `--success-bg` 行底（新登记令牌：`--success` 12% 透明，沿用 `--accent-bg`/`--tool-regex-bg` 的 12% 登记惯例）。
+- 删除：`--error` 文字 + `--error-bg` 行底（同上，新登记令牌）。
+- 修改：`--accent-text` 文字 + `--accent-bg` 行底。
+- 行号/未变更行：`--text-tertiary` / `--text-primary`。
+
+## Risks
+
+- **Myers 平方退化**：病态全异输入在手动模式仍可能 3s+（5k+5k）→ `timeout: 1000` 兜底降级为整体替换视图，页面不卡死；硬上限拦截分钟级输入。
+- **CodeMirror language 仅挂载时读取**：切换模式换语言 → `key={mode}` 强制重挂载，React state 保住文本（同 YamlJsonConverter 已验证路径）。
+- **大结果渲染**：10k 行 diff 全量 DOM 会卡 → 5000 行渲染截断 + 提示。
+- **JSON 巨型值**：变更值直接 stringify 大对象会刷屏 → 对象/数组折叠为类型摘要。

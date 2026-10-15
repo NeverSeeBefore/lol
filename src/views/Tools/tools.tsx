@@ -5,6 +5,7 @@ import EasingVisualizer from './EasingVisualizer';
 import JsonFormatter from './JsonFormatter';
 import JwtParser from './JwtParser';
 import RegexTester from './RegexTester';
+import SemanticDiff from './SemanticDiff';
 import TimestampConverter from './TimestampConverter';
 import YamlJsonConverter from './YamlJsonConverter';
 
@@ -60,5 +61,10 @@ export const tools: ToolItem[] = [
     name: 'YAML/JSON',
     path: 'yaml',
     element: <YamlJsonConverter />,
+  },
+  {
+    name: 'Diff 对比',
+    path: 'diff',
+    element: <SemanticDiff />,
   },
 ];
