@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { tween } from 'Utils/tween';
 import styles from './index.module.less';
 
@@ -8,12 +8,12 @@ function drawCircle(ctx: CanvasRenderingContext2D, width: number, height: number
   // const centerX = width / 2;
   // const centerY = height / 2;
   ctx.setLineDash([1, 8.9]);
-  ctx.lineDashOffset = -offset * 0.75;
+  ctx.lineDashOffset = (-offset * 0.75) % 9.9;
   ctx.lineWidth = 4;
   ctx.strokeStyle = color;
   ctx.arc(width / 2, height / 2, 30, 0, Math.PI * 2);
   ctx.moveTo(width / 2, height / 2);
-  ctx.rotate(offset);
+  ctx.rotate(offset % (Math.PI * 2));
   ctx.stroke();
   ctx.restore();
 }
@@ -45,7 +45,6 @@ function drawRect(ctx: CanvasRenderingContext2D, width: number, height: number, 
   // 91, run
 
   let offsetInside = offset % globalStepCount;
-  console.log(offsetInside);
   // 动画绘制完成
   if (offsetInside >= halfStepCount + gap + halfStepCount) {
     return;
@@ -219,7 +218,7 @@ function drawRotateRect(
   // easeInOutExpo
   const offsetInside = offset % globalStepCount;
   const offsetLine = offsetInside % quarterStepCount;
-  const offsetLineIndex = Number.parseInt((offsetInside / quarterStepCount).toFixed(2), 10) % 4;
+  const offsetLineIndex = Math.floor(offsetInside / quarterStepCount);
   // x * Math.PI/4 +  tween.easeInOutExpo(offsetlibne/quarterStepCount) * Math.PI / 4
   ctx.save();
   ctx.beginPath();
@@ -239,58 +238,69 @@ function drawRotateRect(
   ctx.restore();
 }
 
-export default function Loading() {
+export interface LoadingProps {
+  /** 显示倍率，默认保持 Test 页原来的尺寸。 */
+  scale?: number;
+}
+
+export default function Loading({ scale = 1 }: LoadingProps) {
   const cvsRef = useRef<HTMLCanvasElement>(null);
+  const displayScale = Math.max(0.5, Math.min(3, scale));
 
-  let count = 1;
-  let lastTime = 0;
-  function loadingAnimation(time: number) {
-    if (!cvsRef.current) {
-      return;
-    }
-    if (lastTime === 0) {
-      lastTime = time;
-    }
-    if (time - lastTime > 25) {
-      lastTime = time;
-
-      const ctx = cvsRef.current.getContext('2d');
-      if (!ctx) {
-        return;
-      }
-      const width = cvsRef.current.width || 0;
-      const height = cvsRef.current.height || 0;
-      ctx.clearRect(0, 0, width, height);
-      drawCircle(ctx, width, height, 'rgba(134, 112, 64, 1)', count);
-      drawRect(ctx, width, height, {
-        halfStepCount: 40,
-        rectWidth: 46.67,
-        gap: 4,
-        sleep: 12,
-        offset: count,
-        lineWidth: 1,
-        lineColor: 'rgba(132,112,64, .6)',
-      });
-      drawRect(ctx, width, height, {
-        halfStepCount: 32,
-        rectWidth: 23.3,
-        gap: 8,
-        sleep: 24,
-        offset: count,
-        lineWidth: 2,
-        lineColor: 'rgba(132,112,64, 1)',
-      });
-      drawRotateRect(ctx, width, height, 180, 'rgb(134, 112, 64)', count);
-      count++;
-    }
-    requestAnimationFrame(loadingAnimation);
-  }
   useEffect(() => {
-    requestAnimationFrame(loadingAnimation);
-  });
+    const canvas = cvsRef.current;
+    if (!canvas) return;
+    const pixelScale = displayScale * (window.devicePixelRatio || 1);
+    canvas.width = Math.round(132 * pixelScale);
+    canvas.height = Math.round(70 * pixelScale);
+    const ctx = canvas?.getContext('2d');
+    if (!ctx) return;
+    ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
+
+    let animationFrameId = 0;
+    let startedAt: number | null = null;
+    let lastStep = -1;
+    const frameDuration = 25;
+
+    const loadingAnimation = (time: number) => {
+      if (startedAt === null) startedAt = time;
+      // 按真实经过时间推导相位；掉帧只会跳过画面，不会延长周期。
+      const step = Math.floor((time - startedAt) / frameDuration) + 1;
+      if (step !== lastStep) {
+        lastStep = step;
+        const width = 132;
+        const height = 70;
+        ctx.clearRect(0, 0, width, height);
+        drawCircle(ctx, width, height, 'rgba(134, 112, 64, 1)', step);
+        drawRect(ctx, width, height, {
+          halfStepCount: 40,
+          rectWidth: 46.67,
+          gap: 4,
+          sleep: 12,
+          offset: step,
+          lineWidth: 1,
+          lineColor: 'rgba(132,112,64, .6)',
+        });
+        drawRect(ctx, width, height, {
+          halfStepCount: 32,
+          rectWidth: 23.3,
+          gap: 8,
+          sleep: 24,
+          offset: step,
+          lineWidth: 2,
+          lineColor: 'rgba(132,112,64, 1)',
+        });
+        drawRotateRect(ctx, width, height, 180, 'rgb(134, 112, 64)', step);
+      }
+      animationFrameId = requestAnimationFrame(loadingAnimation);
+    };
+
+    animationFrameId = requestAnimationFrame(loadingAnimation);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [displayScale]);
   return (
     <div className={styles['loading-container']}>
-      <canvas ref={cvsRef} width={132} height={70} />
+      <canvas ref={cvsRef} width={132} height={70} style={{ width: 132 * displayScale, height: 70 * displayScale }} />
     </div>
   );
 }
