@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import Base64UrlCodec from './Base64UrlCodec';
 import ColorConverter from './ColorConverter';
+import CronParser from './CronParser';
 import EasingVisualizer from './EasingVisualizer';
 import JsonFormatter from './JsonFormatter';
 import JwtParser from './JwtParser';
@@ -84,5 +85,11 @@ export const tools: ToolItem[] = [
     path: 'markdown',
     colorVar: 'var(--tool-markdown)',
     element: <MarkdownPreview />,
+  },
+  {
+    name: 'Cron 解析',
+    path: 'cron',
+    colorVar: 'var(--tool-cron)',
+    element: <CronParser />,
   },
 ];

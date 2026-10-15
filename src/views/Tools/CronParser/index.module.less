@@ -1,0 +1,120 @@
+.wrap {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-2);
+}
+
+.title {
+  color: var(--tool-cron); // 工具专属色：页面标题
+  flex: none;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  line-height: var(--leading-tight);
+}
+
+.card {
+  background-color: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.card-label {
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
+}
+
+.input-row {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.mono-input {
+  flex: 1;
+  font-family: var(--font-mono);
+  min-width: 0;
+}
+
+.presets {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.presets-label {
+  color: var(--text-tertiary);
+  flex: none;
+  font-size: var(--text-xs);
+}
+
+.preset-tag {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  user-select: none;
+}
+
+.alert {
+  flex: none;
+}
+
+.description {
+  color: var(--tool-cron); // 工具专属色：标题级读数点缀
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: var(--leading-normal);
+}
+
+.exec-header {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+
+.exec-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.exec-item {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.exec-index {
+  background-color: var(--bg-overlay);
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  min-width: 24px;
+  padding: 0 var(--space-1);
+  text-align: center;
+}
+
+.exec-time {
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.mono-cell {
+  font-family: var(--font-mono);
+}

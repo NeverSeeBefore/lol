@@ -66,6 +66,7 @@
 | `--tool-yaml`     | `#84EBAA` | 142° | YAML/JSON 转换 · 碧绿    |
 | `--tool-diff`     | `#84EBD0` | 164° | Diff 对比 · 青碧         |
 | `--tool-markdown` | `#D2DF49` | 65°  | Markdown 预览 · 橄榄绿   |
+| `--tool-cron`     | `#ED9BA9` | 350° | Cron 解析 · 樱粉         |
 
 取色规则（新增工具时遵守）：
 
