@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Alert, App, Button, Input, Segmented, Table, Tag } from 'antd';
 import { getNextExecutions, gmtOffsetLabel, parseCron } from './utils';
 import styles from './index.module.less';
@@ -33,20 +33,32 @@ function CronParserInner() {
 
   const outcome = useMemo(() => parseCron(input), [input]);
 
-  // 未来执行时间：输入已校验合法，cron-parser 不应再抛错，仍兜底防意外
-  const executions = useMemo(() => {
-    if (outcome.status !== 'ok') return null;
+  // 未来执行时间：normalized 由取值集合重建，cron-parser 理论上不会再抛错；
+  // 仍兜底（计算失败/空序列）为页面内 Alert，toast 放 effect 避免 render 副作用
+  const execResult = useMemo<{ times: string[] | null; error: string | null }>(() => {
+    if (outcome.status !== 'ok') return { times: null, error: null };
     try {
-      return getNextExecutions(outcome.normalized, count);
+      return { times: getNextExecutions(outcome.normalized, count), error: null };
     } catch (e) {
-      message.error(`执行时间计算失败：${e instanceof Error ? e.message : String(e)}`);
-      return null;
+      return { times: null, error: e instanceof Error ? e.message : String(e) };
     }
-  }, [outcome, count, message]);
+  }, [outcome, count]);
+
+  useEffect(() => {
+    if (execResult.error) message.error(`执行时间计算失败：${execResult.error}`);
+  }, [execResult, message]);
 
   const copy = async () => {
-    await navigator.clipboard.writeText(input);
-    message.success('已复制表达式');
+    if (!input.trim()) {
+      message.warning('表达式为空，无可复制内容');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(input);
+      message.success('已复制表达式');
+    } catch {
+      message.error('复制失败，请检查浏览器剪贴板权限');
+    }
   };
 
   const offset = gmtOffsetLabel();
@@ -79,7 +91,7 @@ function CronParserInner() {
         </div>
       </div>
 
-      {outcome.status === 'error' && <Alert className={styles.alert} type="error" showIcon message={outcome.message} />}
+      {outcome.status === 'error' && <Alert className={styles.alert} type="error" showIcon title={outcome.message} />}
 
       {outcome.status === 'ok' && (
         <>
@@ -102,9 +114,13 @@ function CronParserInner() {
                 ]}
               />
             </div>
-            {executions && (
+            {execResult.error && <Alert type="error" showIcon title={`执行时间计算失败：${execResult.error}`} />}
+            {!execResult.error && execResult.times && execResult.times.length === 0 && (
+              <Alert type="warning" showIcon title="该表达式在未来可预见的年份内不会触发" />
+            )}
+            {!execResult.error && execResult.times && execResult.times.length > 0 && (
               <ol className={styles['exec-list']}>
-                {executions.map((t, i) => (
+                {execResult.times.map((t, i) => (
                   <li key={`${t}-${i}`} className={styles['exec-item']}>
                     <span className={styles['exec-index']}>{i + 1}</span>
                     <span className={styles['exec-time']}>{t}</span>

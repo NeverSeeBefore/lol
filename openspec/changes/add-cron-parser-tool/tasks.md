@@ -27,7 +27,7 @@
 - [x] 4.3 `pnpm lint` 无 error、无新增 warning
 - [x] 4.4 Playwright 实测：8+ 组标准表达式解析、未来 10 次时间正确性抽查（与已知答案比对）、字段分解表、各段报错（32 日/25 时/60 分/13 月/8 周/段数）、宏、速查填充、中文描述、其他工具页回归 1 个
 - [x] 4.5 截图 `/tmp/lolf-review/cron.png`，kill dev server
-- [x] 4.6 git 提交 `feat(tools): add cron parser tool`（含 openspec change、package.json、pnpm-lock），提交前 git status 确认只 stage 自己的文件
+- [x] 4.6 git 提交 `feat(tools): add cron parser tool`（含 openspec change；package.json/pnpm-lock 的 cron-parser 依赖先行被 markdown preview 的 5637ec1 一并提交，故本 commit 不含依赖变更），提交前 git status 确认只 stage 自己的文件
 
 ## Workflow follow-up
 

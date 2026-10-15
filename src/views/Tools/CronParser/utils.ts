@@ -295,27 +295,18 @@ function describeCron(input: DescribeInput): string {
   // 日期限定语（空前缀表示「每天」）
   let datePrefix = '';
   if (!monthWild || !domWild || !dowWild) {
-    if (monthWild && domWild) {
-      datePrefix = dowMeaning(dayOfWeek.values);
-    } else if (monthWild && dowWild) {
-      datePrefix =
-        dayOfMonth.values.length === 1 ? `每月 ${dayOfMonth.values[0]} 号` : `每月 ${dayOfMonth.values.join('、')} 号`;
-    } else if (domWild && dowWild) {
-      datePrefix = month.values.length === 1 ? `每年 ${month.values[0]} 月` : `每年 ${month.values.join(' 月、')} 月`;
-    } else {
-      // 多字段组合兜底
-      const parts: string[] = [];
-      if (!monthWild) {
-        parts.push(month.values.length === 1 ? `${month.values[0]} 月` : `${month.values.join(' 月、')} 月`);
-      }
-      if (!domWild) {
-        parts.push(
-          dayOfMonth.values.length === 1 ? `${dayOfMonth.values[0]} 号` : `${dayOfMonth.values.join('、')} 号`,
-        );
-      }
-      if (!dowWild) parts.push(dowMeaning(dayOfWeek.values));
-      datePrefix = parts.join(' ');
-    }
+    const monthPart = monthWild
+      ? ''
+      : month.values.length === 1
+        ? `${month.values[0]} 月`
+        : `${month.values.join(' 月、')} 月`;
+    const domNums = dayOfMonth.values.join('、');
+    const domPart = domWild ? '' : monthWild ? `每月 ${domNums} 号` : `${domNums} 号`;
+    const dowPart = dowWild ? '' : dowMeaning(dayOfWeek.values);
+    // 日+周同时限制时按标准 cron OR 语义触发，描述必须体现「或」
+    const domDowPart = domPart && dowPart ? `${domPart}或${dowPart}` : domPart || dowPart;
+    const monthText = monthPart && !domDowPart ? `每年 ${monthPart}` : monthPart;
+    datePrefix = [monthText, domDowPart].filter(Boolean).join(' ');
   }
 
   // 时间部分
@@ -339,9 +330,10 @@ function describeCron(input: DescribeInput): string {
     const hd = compressValues(hour.values, 0, 23);
     body = datePrefix ? `${datePrefix}的 ${hd} 点第 ${m} 分执行` : `每天 ${hd} 点第 ${m} 分执行`;
   } else {
-    const hd = hour.isWildcard ? '每小时' : `${compressValues(hour.values, 0, 23)} 点`;
-    const base = datePrefix ? `${datePrefix}的` : '每天 ';
-    body = `${base}${hd}第 ${minute.values.join('、')} 分执行`;
+    // 兜底：分多值 + 时限定（时通配的情况已被上方 hour.isWildcard 分支覆盖）
+    const hd = compressValues(hour.values, 0, 23);
+    const base = datePrefix ? `${datePrefix}的` : '每天';
+    body = `${base} ${hd} 点第 ${minute.values.join('、')} 分执行`;
   }
 
   // 秒前缀（6 段）
@@ -423,8 +415,10 @@ export function parseCron(input: string): ParseOutcome {
       return { status: 'error', message: `第 ${i + 1} 段「${spec.label}」：${result.reason}` };
     }
     parsedList.push(result.field);
-    // cron-parser 原生支持 7=周日，仅需把 `?` 归一为 `*`
-    normalizedParts.push(raw === '?' ? '*' : raw);
+    // 用归一后的取值集合重建喂给 cron-parser 的表达式：
+    // 原始 raw 可能含重复值（0,7）、名字、7=周日等，cron-parser 对重复值抛英文异常，
+    // 归一重建保证「我校验过什么，就执行什么」
+    normalizedParts.push(result.field.isWildcard ? '*' : result.field.values.join(','));
     fields.push({
       index: i + 1,
       label: spec.label,
@@ -436,6 +430,25 @@ export function parseCron(input: string): ParseOutcome {
   }
 
   const offset = hasSeconds ? 1 : 0;
+
+  // 限定月与日集合无交集 → 永不触发（如 2 月 30 号、4/6 月 31 号）；
+  // 不拦截的话 cron-parser 会抛英文异常或 take() 静默产出空序列
+  const domField = parsedList[offset + 2];
+  const monthField = parsedList[offset + 3];
+  if (!domField.isWildcard && !monthField.isWildcard) {
+    // 各月最大天数，2 月按闰年 29 计（29 号在闰年可触发，不误伤）
+    const DAYS_IN_MONTH = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    const possible = domField.values.some((d) => monthField.values.some((mo) => d <= DAYS_IN_MONTH[mo - 1]));
+    if (!possible) {
+      return {
+        status: 'error',
+        message:
+          `该表达式永不触发：第 ${offset + 3} 段「日」的取值（${domField.values.join('、')} 号）` +
+          `在第 ${offset + 4} 段「月」限定的月份（${monthField.values.join('、')} 月）中不存在`,
+      };
+    }
+  }
+
   const description = describeCron({
     hasSeconds,
     second: hasSeconds ? parsedList[0] : undefined,
