@@ -14,6 +14,8 @@ export interface ToolItem {
   name: string;
   /** 子路由路径（相对 /tools） */
   path: string;
+  /** 工具专属色令牌（theme.less 登记的 --tool-*），驱动导航选中态 */
+  colorVar: string;
   element: ReactNode;
 }
 
@@ -25,46 +27,55 @@ export const tools: ToolItem[] = [
   {
     name: 'JSON 格式化',
     path: 'json',
+    colorVar: 'var(--tool-json)',
     element: <JsonFormatter />,
   },
   {
     name: '颜色转换',
     path: 'color',
+    colorVar: 'var(--tool-color)',
     element: <ColorConverter />,
   },
   {
     name: '时间戳转换',
     path: 'timestamp',
+    colorVar: 'var(--tool-time)',
     element: <TimestampConverter />,
   },
   {
     name: 'Base64/URL',
     path: 'codec',
+    colorVar: 'var(--tool-base64)',
     element: <Base64UrlCodec />,
   },
   {
     name: '正则测试',
     path: 'regex',
+    colorVar: 'var(--tool-regex)',
     element: <RegexTester />,
   },
   {
     name: 'JWT 解析',
     path: 'jwt',
+    colorVar: 'var(--tool-jwt)',
     element: <JwtParser />,
   },
   {
     name: '缓动曲线',
     path: 'easing',
+    colorVar: 'var(--tool-easing)',
     element: <EasingVisualizer />,
   },
   {
     name: 'YAML/JSON',
     path: 'yaml',
+    colorVar: 'var(--tool-yaml)',
     element: <YamlJsonConverter />,
   },
   {
     name: 'Diff 对比',
     path: 'diff',
+    colorVar: 'var(--tool-diff)',
     element: <SemanticDiff />,
   },
 ];
