@@ -57,9 +57,21 @@ export interface TextDiffResult {
 function toRows(type: 'add' | 'del', text: string): TextDiffRow[] {
   if (!text) return [];
   const lines = text.split('\n');
+  if (lines[lines.length - 1] === '') lines.pop();
   return lines.map((t, idx) =>
     type === 'del' ? { type, text: t, oldLine: idx + 1 } : { type, text: t, newLine: idx + 1 },
   );
+}
+
+/**
+ * 行归一化：CRLF/CR → LF（\r 不可见，避免两侧行尾不同造成假修改）；
+ * 末尾补 \n——jsdiff 行比较含换行符，末尾无 \n 时末行与相邻变更连成一块，
+ * 配对逻辑会把公共末行配成内容相同的幻影修改（reviewer 实测 ignoreNewline 选项无效）。
+ */
+function normalizeLines(text: string): string {
+  if (!text) return text;
+  const s = text.replace(/\r\n?/g, '\n');
+  return s.endsWith('\n') ? s : `${s}\n`;
 }
 
 /**
@@ -67,11 +79,15 @@ function toRows(type: 'add' | 'del', text: string): TextDiffRow[] {
  * timeout 兜底：Myers 病态全异输入平方退化，超时返回 undefined → 整体替换降级。
  */
 export function computeTextDiff(oldText: string, newText: string): TextDiffResult {
-  const parts = diffLines(oldText, newText, { timeout: DIFF_TIMEOUT });
+  const old = normalizeLines(oldText);
+  const fresh = normalizeLines(newText);
+  const parts = diffLines(old, fresh, { timeout: DIFF_TIMEOUT });
   if (!parts) {
+    const delRows = toRows('del', old);
+    const addRows = toRows('add', fresh);
     return {
-      rows: [...toRows('del', oldText), ...toRows('add', newText)],
-      stats: { added: totalLines(newText), removed: totalLines(oldText), modified: 0 },
+      rows: [...delRows, ...addRows],
+      stats: { added: addRows.length, removed: delRows.length, modified: 0 },
       fallback: true,
     };
   }
@@ -153,15 +169,27 @@ export interface JsonDiffStats {
 export type JsonDiffResult =
   { ok: true; changes: JsonChange[]; stats: JsonDiffStats; truncated: boolean } | { ok: false; error: string };
 
-/** JSON.parse 错误 → 友好提示：V8 消息含「at position N」时换算为行列号（同 YamlJsonConverter 套路） */
+/**
+ * JSON.parse 错误 → 友好提示：
+ * 1. 优先解析 V8 自带的「(line N column M)」，输出完整行列；
+ * 2. 否则有「at position N」时自行换算行列；
+ * 3. 词法级错误（如 `abc`、`{"a": undefined}`）现代 V8 完全无位置信息——如实降级为原始原因，不编造行列。
+ */
 function formatJsonError(e: unknown, input: string): string {
   const message = e instanceof Error ? e.message : 'JSON 解析失败';
+  const lineCol = /\(line (\d+) column (\d+)\)/.exec(message);
+  if (lineCol) {
+    const reason = message.replace(/\s*\(line \d+ column \d+\).*$/, '').replace(/ at position \d+$/, '');
+    return `第 ${lineCol[1]} 行第 ${lineCol[2]} 列：${reason}`;
+  }
   const match = /at position (\d+)/.exec(message);
   if (!match) return message;
   const pos = Number(match[1]);
-  const line = input.slice(0, pos).split('\n').length;
+  const before = input.slice(0, pos);
+  const line = before.split('\n').length;
+  const col = pos - before.lastIndexOf('\n');
   const reason = message.replace(/ at position \d+.*$/, '');
-  return `第 ${line} 行：${reason}`;
+  return `第 ${line} 行第 ${col} 列：${reason}`;
 }
 
 function isPlainObject(v: unknown): v is Record<string, unknown> {

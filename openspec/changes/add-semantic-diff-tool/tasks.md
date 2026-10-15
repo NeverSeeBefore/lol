@@ -16,7 +16,7 @@
 
 - [x] 3.1 新建 `src/views/Tools/SemanticDiff/index.tsx` + `index.module.less`：Segmented 模式切换 + 双栏 CodeEditor（左旧右新，`key={mode}` 重挂载换语言）+ 对比按钮（手动模式）+ 交换左右 + 清空 + Diff 结果视图 + 状态栏统计
 - [x] 3.2 文本结果渲染：行号 + +/-//~ 标记 + 新增绿/删除红/修改琥珀（语义令牌），超 5000 行截断提示
-- [x] 3.3 JSON 结果渲染：变更列表（badge + 路径 + old → new + 类型变化标注），非法 JSON 报错指明左/右侧与行列
+- [x] 3.3 JSON 结果渲染：变更列表（badge + 路径 + old → new + 类型变化标注），非法 JSON 报错指明左/右侧；有位置信息时给出「第 N 行第 M 列」（V8 自带行列优先，`at position N` 次之），词法级错误无位置信息时如实降级为原始原因
 - [x] 3.4 性能降级：超实时阈值停实时计算显示「对比」按钮；超硬上限拒绝并提示；diff 超时按整体替换展示并提示
 - [x] 3.5 暗色规范：标题 `--tool-diff`，增删改用 --success/--error/--accent-text 系，无硬编码色值
 
