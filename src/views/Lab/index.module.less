@@ -1,0 +1,131 @@
+.layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.sidebar {
+  background: var(--bg-raised);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 28px 12px;
+  width: 220px;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 12px 36px;
+
+  strong {
+    font-size: 23px;
+    letter-spacing: -0.04em;
+  }
+}
+
+.kicker,
+.section-label {
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+}
+
+.section-label {
+  padding: 0 12px 10px;
+}
+
+.item {
+  align-items: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  display: flex;
+  font-size: var(--text-sm);
+  gap: 12px;
+  min-height: 42px;
+  padding: 8px 12px;
+  position: relative;
+  text-decoration: none;
+  transition:
+    background-color var(--motion-fast) var(--motion-ease),
+    color var(--motion-fast) var(--motion-ease);
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  &.active {
+    background: rgb(241 169 198 / 12%);
+    color: #f1a9c6;
+    font-weight: 600;
+
+    &::before {
+      background: #f1a9c6;
+      border-radius: 2px;
+      bottom: 6px;
+      content: '';
+      left: 0;
+      position: absolute;
+      top: 6px;
+      width: 3px;
+    }
+  }
+}
+
+.number {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  opacity: 0.7;
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  color: var(--text-tertiary);
+  font-size: var(--text-xs);
+  line-height: var(--leading-article);
+  margin: auto 12px 0;
+  padding-top: 24px;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+@media (width < 768px) {
+  /* stylelint-disable-next-line rule-empty-line-before */ // prettier 会删掉规则前的空行，与 stylelint 冲突
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    border-bottom: 1px solid var(--border);
+    border-right: none;
+    flex-direction: row;
+    gap: 8px;
+    overflow: auto hidden;
+    padding: 8px 12px;
+    width: 100%;
+  }
+
+  .heading,
+  .section-label,
+  .footer {
+    display: none;
+  }
+
+  .item {
+    flex: none;
+  }
+}

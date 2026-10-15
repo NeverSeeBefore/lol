@@ -1,0 +1,123 @@
+.slot {
+  isolation: isolate;
+  position: relative;
+  width: 100%;
+}
+
+.large {
+  --radius: 125px;
+  --depth: -125px;
+
+  height: 144px;
+}
+
+.small {
+  --radius: 45px;
+  --depth: -45px;
+
+  height: 52px;
+}
+
+.viewport {
+  height: 100%;
+  mask-image: linear-gradient(transparent 0%, #000 22%, #000 78%, transparent 100%);
+  overflow: hidden;
+  perspective: 750px;
+  width: 100%;
+}
+
+.track,
+.spinning {
+  height: 100%;
+  position: relative;
+  transform: translateZ(var(--depth));
+  transform-style: preserve-3d;
+  width: 100%;
+}
+
+.spinning {
+  animation: roll var(--roll-duration) linear both;
+  will-change: transform;
+}
+
+.face {
+  align-items: center;
+  backface-visibility: hidden;
+  display: flex;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  inset: 0;
+  justify-content: center;
+  line-height: 1.1;
+  padding: 0 8px;
+  position: absolute;
+  text-align: center;
+  transform: rotateX(var(--face-angle)) translateZ(var(--radius));
+  white-space: nowrap;
+}
+
+.face-text {
+  display: inline-block;
+}
+
+.spinning .face:last-child .face-text {
+  animation: land var(--roll-duration) linear both;
+}
+
+@keyframes roll {
+  /* stylelint-disable-next-line rule-empty-line-before */
+  0% {
+    animation-timing-function: cubic-bezier(0.4, 0, 0.8, 0.6);
+    transform: translateZ(var(--depth)) rotateX(0);
+  }
+
+  12% {
+    animation-timing-function: linear;
+    transform: translateZ(var(--depth)) rotateX(-55deg);
+  }
+
+  82% {
+    animation-timing-function: cubic-bezier(0.2, 0.85, 0.3, 1);
+    transform: translateZ(var(--depth)) rotateX(-280deg);
+  }
+
+  92% {
+    animation-timing-function: ease-out;
+    transform: translateZ(var(--depth)) rotateX(-304deg);
+  }
+
+  100% {
+    transform: translateZ(var(--depth)) rotateX(-300deg);
+  }
+}
+
+@keyframes land {
+  /* stylelint-disable-next-line rule-empty-line-before */
+  0% {
+    transform: scale(0.96);
+  }
+
+  82% {
+    transform: scale(0.96);
+  }
+
+  92% {
+    transform: scale(1.035);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* stylelint-disable-next-line rule-empty-line-before */ // prettier 会删掉规则前的空行，与 stylelint 冲突
+  .spinning {
+    animation: none;
+    transform: translateZ(var(--depth)) rotateX(-300deg);
+  }
+
+  .spinning .face:last-child .face-text {
+    animation: none;
+  }
+}

@@ -2,6 +2,21 @@
 
 个人前端项目：博客 + 前端工具集（JSON 格式化、格式转换器等，持续添加中）。
 
+## 实验室
+
+`/lab/kaomoji` 展示颜文字滚轮，`/lab/kaomoji-library` 可按心情浏览并复制精选颜文字，`/lab/loading` 展示从 Test 页复用的 Canvas Loading。`/lab` 会重定向到第一个作品。实验室菜单由 `src/views/Lab/experiments.ts` 统一配置。颜文字动画封装在 `src/components/KaomojiSlot`，精选颜文字与组合零件库在同目录的 `library.ts`。
+
+```tsx
+import KaomojiSlot from 'Components/KaomojiSlot';
+
+// 作为 loading 动画使用；加载结束时卸载组件即可自动清理计时器
+{
+  loading && <KaomojiSlot size="small" intervalMs={2400} />;
+}
+```
+
+Canvas Loading 同样可直接使用 `<Loading />`。动画按实际经过时间计算进度，卸载组件时会取消动画帧。
+
 ## 技术栈
 
 - Vite 8 + React 19 + TypeScript 5

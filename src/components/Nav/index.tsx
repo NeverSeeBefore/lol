@@ -20,6 +20,9 @@ export default function Nav() {
       <NavLink to="/tools" className={({ isActive }) => (isActive ? styles.active : undefined)}>
         tools
       </NavLink>
+      <NavLink to="/lab" className={({ isActive }) => (isActive ? styles.active : undefined)}>
+        实验室
+      </NavLink>
       <NavLink to="/aaa" className={({ isActive }) => (isActive ? styles.active : undefined)}>
         404
       </NavLink>

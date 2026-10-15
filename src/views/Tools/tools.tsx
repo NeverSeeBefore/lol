@@ -1,15 +1,16 @@
-import { ReactNode } from 'react';
-import Base64UrlCodec from './Base64UrlCodec';
-import ColorConverter from './ColorConverter';
-import CronParser from './CronParser';
-import EasingVisualizer from './EasingVisualizer';
-import JsonFormatter from './JsonFormatter';
-import JwtParser from './JwtParser';
-import MarkdownPreview from './MarkdownPreview';
-import RegexTester from './RegexTester';
-import SemanticDiff from './SemanticDiff';
-import TimestampConverter from './TimestampConverter';
-import YamlJsonConverter from './YamlJsonConverter';
+import { lazy, ReactNode } from 'react';
+
+const Base64UrlCodec = lazy(() => import('./Base64UrlCodec'));
+const ColorConverter = lazy(() => import('./ColorConverter'));
+const CronParser = lazy(() => import('./CronParser'));
+const EasingVisualizer = lazy(() => import('./EasingVisualizer'));
+const JsonFormatter = lazy(() => import('./JsonFormatter'));
+const JwtParser = lazy(() => import('./JwtParser'));
+const MarkdownPreview = lazy(() => import('./MarkdownPreview'));
+const RegexTester = lazy(() => import('./RegexTester'));
+const SemanticDiff = lazy(() => import('./SemanticDiff'));
+const TimestampConverter = lazy(() => import('./TimestampConverter'));
+const YamlJsonConverter = lazy(() => import('./YamlJsonConverter'));
 
 export interface ToolItem {
   /** 导航显示名 */
