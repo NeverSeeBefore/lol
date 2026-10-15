@@ -12,9 +12,12 @@
   - **实测关键坑**：`parseAllDocuments` 解析失败**不抛异常**，错误收进 `doc.errors`，`toJSON()` 仍返回尽力而为的错误结果——必须显式检查 `doc.errors`，非法 YAML 才能正确报错（否则静默产出残缺 JSON）。
   - 实测：解析错误对象含 `linePos: [{ line, col }, ...]` 与 `code`，但 `message` 内嵌输入代码片段回显（如 `\n\n 2\n ^\n`），直接展示会剧透输入且冗长 → **错误格式化函数**从 `message` 截取首行并剥离「 at line N, column M」尾巴，用 `linePos` 重组为「第 N 行：原因」；无 `linePos` 时只给原因。
   - 实测：锚点/别名（`&x`/`*x`）解析后自动展开为内联值；`doc.toJSON()` 的结果 JSON.stringify 即可（极端循环引用 JSON.stringify 会抛错，归入错误提示兜底）。
+  - **实测坑 2（评审修复）**：纯注释/纯空白输入返回 **0 个文档**，`JSON.stringify(undefined)` 得到 `undefined`（非字符串），下游 `.length` 直接白屏——0 文档时按空输入处理返回 `''`。
+  - **实测坑 3（评审修复）**：行尾 `---` 产生 `contents === null` 的幻影尾文档（`'a: 1\n---\n'` → 2 文档，后者为 null）——过滤尾部空文档再计数。
+  - **实测坑 4（评审修复）**：未知 tag（如 `!nosuchtag`）静默降级为字符串，收进 `doc.warnings`（同样带 linePos + 回显）——透出为状态栏 warning 提示（`--warning` 色），不阻塞转换。
 - `convertJsonToYaml(input): CodecResult`：`JSON.parse` → `yaml.stringify(data, { indent: 2 })`（实测输出 2 空格缩进，中文不转义）。
-  - V8 的 JSON.parse 错误消息含「at position N」时换算为行列号（按 `\n` 分段累计），给出「第 N 行：原因」；无位置信息时直接给原因。
-- 判别联合 `CodecResult = { ok: true; result: string; docCount?: number } | { ok: false; error: string }`——`docCount > 1` 时页面提示「输入含 N 个文档，已合并为 JSON 数组」。
+  - **JSON 错误定位（评审修复）**：V8 错误消息有两种格式——旧式「... at position N」（有位置）与新版「Unexpected token '}', ..."原文" is not valid JSON」（**无位置且内嵌输入回显**）。决策：不依赖 V8 位置字段，实现极简 JSON 校验器 `findJsonErrorPos`（仅错误路径运行，O(n) 单趟，严格文法）自扫错误位置换算行号；消息统一剥掉 ` at position N` 尾巴与 `, ..."原文" is not valid JSON` 回显片段。
+- 判别联合 `CodecResult = { ok: true; result: string; docCount?: number; warning?: string } | { ok: false; error: string }`——`docCount > 1` 时页面提示「输入含 N 个文档，已合并为 JSON 数组」；`warning` 存在时状态栏以 `--warning` 色提示。
 
 ### YAML 特性边界（实测确认）
 
@@ -26,6 +29,8 @@
 | null 写法    | `~`/`null`/`Null`/空值 → null                            | 库默认行为，无需处理                              |
 | 日期标量     | yaml 2.x 默认保持字符串（`2024-01-15` 不实例化 Date）    | 往返安全，无需处理                                |
 | 制表符缩进   | 报 `TAB_AS_INDENT`，linePos 定位                         | 走错误定位流程                                    |
+| 行尾 `---`   | 产生 `contents === null` 的幻影尾文档                    | 过滤尾部空文档，不计入文档数                      |
+| 未知 tag     | `!xxx` 静默降级为字符串，收进 `doc.warnings`             | 状态栏 `--warning` 色提示（含行号），不阻塞转换   |
 
 ### 页面结构（index.tsx）
 

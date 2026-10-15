@@ -56,6 +56,7 @@ function YamlJsonConverterInner() {
   const output = result?.ok ? result.result : '';
   const error = result && !result.ok ? result.error : null;
   const docCount = result?.ok ? result.docCount : undefined;
+  const warning = result?.ok ? result.warning : undefined;
 
   const copy = async () => {
     if (!output) {
@@ -115,6 +116,7 @@ function YamlJsonConverterInner() {
         {' | '}
         <span>输出 {statOf(output)}</span>
         {docCount !== undefined && docCount > 1 && <span> | 输入含 {docCount} 个文档，已合并为 JSON 数组</span>}
+        {warning && <span className={styles.warn}> | {warning}</span>}
         {error && <span className={styles.invalid}> | {error}</span>}
       </div>
     </div>
