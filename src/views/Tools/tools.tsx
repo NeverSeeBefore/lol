@@ -4,6 +4,7 @@ import ColorConverter from './ColorConverter';
 import EasingVisualizer from './EasingVisualizer';
 import JsonFormatter from './JsonFormatter';
 import JwtParser from './JwtParser';
+import MarkdownPreview from './MarkdownPreview';
 import RegexTester from './RegexTester';
 import SemanticDiff from './SemanticDiff';
 import TimestampConverter from './TimestampConverter';
@@ -77,5 +78,11 @@ export const tools: ToolItem[] = [
     path: 'diff',
     colorVar: 'var(--tool-diff)',
     element: <SemanticDiff />,
+  },
+  {
+    name: 'Markdown 预览',
+    path: 'markdown',
+    colorVar: 'var(--tool-markdown)',
+    element: <MarkdownPreview />,
   },
 ];

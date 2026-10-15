@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import type { RefObject } from 'react';
 import { Compartment, EditorState, Extension } from '@codemirror/state';
 import {
   Decoration,
@@ -63,6 +64,11 @@ export interface CodeEditorProps {
    * 必须带 `g` flag（MatchDecorator 要求）；调用方须保证正则不匹配空串（否则跳过高亮）。
    */
   highlightRegex?: RegExp | null;
+  /**
+   * 可选：挂载后把 EditorView 实例写入该 ref（卸载时置 null），
+   * 供调用方读写选区/派发事务（如 Markdown 工具栏插入语法）。实例生命周期仍由本组件管理。
+   */
+  editorRef?: RefObject<EditorView | null>;
 }
 
 /** 匹配高亮插件：MatchDecorator 只计算可视区间，正则变更经 Compartment 重配置 */
@@ -100,6 +106,7 @@ export default function CodeEditor({
   placeholder,
   language = 'json',
   highlightRegex = null,
+  editorRef,
 }: CodeEditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
@@ -142,11 +149,13 @@ export default function CodeEditor({
       parent: containerRef.current,
     });
     viewRef.current = view;
+    if (editorRef) editorRef.current = view;
 
     return () => {
       view.destroy();
       viewRef.current = null;
       highlightCompartmentRef.current = null;
+      if (editorRef) editorRef.current = null;
     };
     // 编辑器实例只创建一次；value/lint 的变更由下方 effect 同步
     // eslint-disable-next-line react-hooks/exhaustive-deps
