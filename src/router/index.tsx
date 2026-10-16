@@ -4,6 +4,7 @@ import { Navigate, RouteObject } from 'react-router-dom';
 import { tools } from 'Src/views/Tools/tools';
 import { experiments } from 'Src/views/Lab/experiments';
 import Main from 'Src/components/Main';
+import styles from './loading.module.less';
 
 const Counter = lazy(() => import('Src/components/Counter'));
 const Loading = lazy(() => import('Src/components/Loading'));
@@ -19,7 +20,17 @@ const ColorTransform = lazy(() => import('Src/views/Test/components/ColorTransfo
 const Login = lazy(() => import('Src/views/Login'));
 
 function withFallback(element: ReactNode) {
-  return <Suspense fallback={<div role="status">加载中…</div>}>{element}</Suspense>;
+  return (
+    <Suspense
+      fallback={
+        <div className={styles.fallback} role="status">
+          加载中…
+        </div>
+      }
+    >
+      {element}
+    </Suspense>
+  );
 }
 
 export const routeConfig: RouteObject[] = [

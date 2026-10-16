@@ -253,14 +253,42 @@ export default function Loading({ scale = 1 }: LoadingProps) {
     const pixelScale = displayScale * (window.devicePixelRatio || 1);
     canvas.width = Math.round(132 * pixelScale);
     canvas.height = Math.round(70 * pixelScale);
-    const ctx = canvas?.getContext('2d');
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
     ctx.setTransform(pixelScale, 0, 0, pixelScale, 0, 0);
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent-text').trim();
 
     let animationFrameId = 0;
     let startedAt: number | null = null;
     let lastStep = -1;
     const frameDuration = 25;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const drawFrame = (step: number) => {
+      const width = 132;
+      const height = 70;
+      ctx.clearRect(0, 0, width, height);
+      drawCircle(ctx, width, height, accent, step);
+      drawRect(ctx, width, height, {
+        halfStepCount: 40,
+        rectWidth: 46.67,
+        gap: 4,
+        sleep: 12,
+        offset: step,
+        lineWidth: 1,
+        lineColor: accent,
+      });
+      drawRect(ctx, width, height, {
+        halfStepCount: 32,
+        rectWidth: 23.3,
+        gap: 8,
+        sleep: 24,
+        offset: step,
+        lineWidth: 2,
+        lineColor: accent,
+      });
+      drawRotateRect(ctx, width, height, 180, accent, step);
+    };
 
     const loadingAnimation = (time: number) => {
       if (startedAt === null) startedAt = time;
@@ -268,39 +296,38 @@ export default function Loading({ scale = 1 }: LoadingProps) {
       const step = Math.floor((time - startedAt) / frameDuration) + 1;
       if (step !== lastStep) {
         lastStep = step;
-        const width = 132;
-        const height = 70;
-        ctx.clearRect(0, 0, width, height);
-        drawCircle(ctx, width, height, 'rgba(134, 112, 64, 1)', step);
-        drawRect(ctx, width, height, {
-          halfStepCount: 40,
-          rectWidth: 46.67,
-          gap: 4,
-          sleep: 12,
-          offset: step,
-          lineWidth: 1,
-          lineColor: 'rgba(132,112,64, .6)',
-        });
-        drawRect(ctx, width, height, {
-          halfStepCount: 32,
-          rectWidth: 23.3,
-          gap: 8,
-          sleep: 24,
-          offset: step,
-          lineWidth: 2,
-          lineColor: 'rgba(132,112,64, 1)',
-        });
-        drawRotateRect(ctx, width, height, 180, 'rgb(134, 112, 64)', step);
+        drawFrame(step);
       }
       animationFrameId = requestAnimationFrame(loadingAnimation);
     };
 
-    animationFrameId = requestAnimationFrame(loadingAnimation);
-    return () => cancelAnimationFrame(animationFrameId);
+    const updateMotion = () => {
+      cancelAnimationFrame(animationFrameId);
+      if (reducedMotion.matches) {
+        drawFrame(40);
+      } else {
+        startedAt = null;
+        lastStep = -1;
+        animationFrameId = requestAnimationFrame(loadingAnimation);
+      }
+    };
+
+    reducedMotion.addEventListener('change', updateMotion);
+    updateMotion();
+    return () => {
+      reducedMotion.removeEventListener('change', updateMotion);
+      cancelAnimationFrame(animationFrameId);
+    };
   }, [displayScale]);
   return (
-    <div className={styles['loading-container']}>
-      <canvas ref={cvsRef} width={132} height={70} style={{ width: 132 * displayScale, height: 70 * displayScale }} />
+    <div className={styles['loading-container']} role="status" aria-label="加载中">
+      <canvas
+        aria-hidden="true"
+        ref={cvsRef}
+        width={132}
+        height={70}
+        style={{ width: 132 * displayScale, height: 70 * displayScale }}
+      />
     </div>
   );
 }
