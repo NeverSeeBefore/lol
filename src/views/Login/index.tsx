@@ -1,7 +1,3 @@
-import React from 'react';
-
-type Props = unknown;
-
-export default function Login(props: Props) {
+export default function Login() {
   return <div>login</div>;
 }

@@ -1,23 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { tween, tweenDotObjDemo } from 'Utils/tween';
 import styles from './index.module.less';
 
-interface IProps {}
-
 type TTweenKey = keyof typeof tween;
+const funArr = Object.keys(tween) as TTweenKey[];
 
 function TweenDemo() {
-  console.log('render');
   const canvasRef = useRef<Partial<Record<string, HTMLCanvasElement>>>({});
   const canvasWidth = 100;
   const canvasHeight = 200;
   const canvasSightWidth = 100;
   const canvasSightHeight = 100;
 
-  const funArr = Object.keys(tween) as TTweenKey[];
-
   useEffect(() => {
-    console.log('rendered', canvasRef);
     for (const funName of funArr) {
       if (canvasRef.current[funName] !== undefined && tweenDotObjDemo[funName]) {
         const ctx = canvasRef.current[funName]?.getContext('2d') as CanvasRenderingContext2D;
@@ -34,7 +29,7 @@ function TweenDemo() {
         ctx.stroke();
       }
     }
-  });
+  }, []);
 
   return (
     <div className={styles['tween-demo']}>

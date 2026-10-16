@@ -76,8 +76,9 @@ export const tween = {
   easeInOutExpo(pos: number) {
     if (pos === 0) return 0;
     if (pos === 1) return 1;
-    if ((pos /= 0.5) < 1) return 0.5 * 2 ** (10 * (pos - 1));
-    return 0.5 * (-(2 ** (-10 * --pos)) + 2);
+    const normalized = pos / 0.5;
+    if (normalized < 1) return 0.5 * 2 ** (10 * (normalized - 1));
+    return 0.5 * (-(2 ** (-10 * (normalized - 1))) + 2);
   },
 
   easeInCirc(pos: number) {

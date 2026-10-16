@@ -1,4 +1,3 @@
-import { ThunkAction } from '@reduxjs/toolkit';
 import { store } from './index';
 // TODO: 循环引用了，但是怎么解决呢？
 

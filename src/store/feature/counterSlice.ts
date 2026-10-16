@@ -17,8 +17,8 @@ const initialState: CounterState = {
 
 export const fetchSyncNumber = createAsyncThunk<number, number, { dispatch: AppDispatch; state: RootState }>(
   'counter/getSyncNumber',
-  async (max, api) => {
-    const data = await new Promise<number>((resolve, reject) => {
+  async (max) => {
+    const data = await new Promise<number>((resolve) => {
       setTimeout(() => {
         resolve(Math.floor(Math.random() * max));
       }, 3000);

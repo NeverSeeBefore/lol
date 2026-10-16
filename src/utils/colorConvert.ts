@@ -14,8 +14,8 @@ const rgb2hsl = ([R, G, B]: number[]) => {
   const deltaMax = max - min; // Delta RGB value
 
   const L = (max + min) / 2;
-  let H = 0;
-  let S = 0;
+  let H: number;
+  let S: number;
 
   if (deltaMax === 0) {
     // This is a gray, no chroma...
@@ -42,6 +42,7 @@ const rgb2hsl = ([R, G, B]: number[]) => {
         H = 2 / 3 + deltaG - deltaR;
         break;
       default:
+        H = 0;
         break;
     }
 
@@ -55,9 +56,9 @@ const hsl2rgb = ([H, S, L]: number[]) => {
   // H, S and L input range = 0 ÷ 1.0
   // R, G and B output range = 0 ÷ 255
 
-  let R = 0;
-  let G = 0;
-  let B = 0;
+  let R: number;
+  let G: number;
+  let B: number;
   if (S === 0) {
     R = L * 255;
     G = L * 255;
@@ -95,8 +96,8 @@ const rgb2hsv = ([R, G, B]: number[]) => {
   const deltaMax = max - min; // Delta RGB value
 
   const V = max;
-  let H = 0;
-  let S = 0;
+  let H: number;
+  let S: number;
 
   if (deltaMax === 0) {
     // This is a gray, no chroma...
@@ -121,6 +122,7 @@ const rgb2hsv = ([R, G, B]: number[]) => {
         H = 2 / 3 + deltaG - deltaR;
         break;
       default:
+        H = 0;
         break;
     }
 

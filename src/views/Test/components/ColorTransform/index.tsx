@@ -1,4 +1,3 @@
-import React from 'react';
 import ColorBoard from 'Src/components/ColorBoard';
 import styles from './index.module.less';
 

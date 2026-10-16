@@ -1,7 +1,3 @@
-import React from 'react';
-
-type Props = unknown;
-
-export default function About(props: Props) {
+export default function About() {
   return <div>About</div>;
 }
