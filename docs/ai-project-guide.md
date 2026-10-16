@@ -58,6 +58,10 @@ import X from 'Static/...'; // src/static/
 - **导入扩展名**：导入 ts/tsx 模块不写扩展名
 - **样式**：单引号、属性按字母序（stylelint `order/properties-alphabetical-order`，保存时 `--fix` 可自动整理）
 
+## 文档约定
+
+- 项目文档一般使用中文编写；代码标识符、命令、文件路径和确需保留的英文术语可保持原文。
+
 ## Lint 体系（ESLint 9 flat config）
 
 - `eslint.config.js`：js/ts/react/jsx-a11y/import 推荐集 + `eslint-config-prettier` 收尾
