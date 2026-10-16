@@ -1,13 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { Provider } from 'react-redux';
 import { useAppDispatch, useAppSelector } from 'Src/hooks';
+import { store } from 'Src/store';
 import { incrementByAmount, decrement, increment, fetchSyncNumber } from 'Src/store/feature/counterSlice';
 import styles from './index.module.less';
 
-console.log(styles);
-
-export default function Counter() {
-  console.log('render');
-
+function CounterInner() {
   const dispatch = useAppDispatch();
   const { value: countValue, loading, title } = useAppSelector((state) => state.counter);
   const [amount, setAmount] = useState(1);
@@ -50,5 +48,13 @@ export default function Counter() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function Counter() {
+  return (
+    <Provider store={store}>
+      <CounterInner />
+    </Provider>
   );
 }
