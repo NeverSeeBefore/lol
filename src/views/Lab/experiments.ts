@@ -4,6 +4,9 @@ import type { ComponentType } from 'react';
 const KaomojiPage = lazy(() => import('./KaomojiPage'));
 const KaomojiLibraryPage = lazy(() => import('./KaomojiLibraryPage'));
 const LoadingPage = lazy(() => import('./LoadingPage'));
+const PixelStudioPage = lazy(() => import('./PixelStudioPage'));
+const CellularLabPage = lazy(() => import('./CellularLabPage'));
+const PixelWallPage = lazy(() => import('./PixelWallPage'));
 
 export interface ExperimentItem {
   path: string;
@@ -31,5 +34,23 @@ export const experiments: ExperimentItem[] = [
     name: '轨道 Loading',
     number: '03',
     component: LoadingPage,
+  },
+  {
+    path: 'pixel-studio',
+    name: '像素工坊',
+    number: '04',
+    component: PixelStudioPage,
+  },
+  {
+    path: 'cellular',
+    name: '生命沙盘',
+    number: '05',
+    component: CellularLabPage,
+  },
+  {
+    path: 'pixel-wall',
+    name: '像素背景墙',
+    number: '06',
+    component: PixelWallPage,
   },
 ];

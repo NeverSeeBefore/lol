@@ -1,0 +1,35 @@
+.wall {
+  background: #0b1222;
+  isolation: isolate;
+  min-height: 280px;
+  overflow: hidden;
+  position: relative;
+}
+
+.visual,
+.shade {
+  inset: 0;
+  position: absolute;
+}
+
+.visual {
+  overflow: hidden;
+}
+
+.canvas {
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  width: 100%;
+}
+
+.shade {
+  background: linear-gradient(90deg, #080e1d 0%, #080e1d 31%, transparent 85%);
+  pointer-events: none;
+}
+
+.content {
+  min-height: inherit;
+  position: relative;
+  z-index: 1;
+}
