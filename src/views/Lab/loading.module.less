@@ -14,7 +14,7 @@
   margin-bottom: 40px;
 
   h1 {
-    font-size: clamp(34px, 5vw, 56px);
+    font-size: clamp(var(--text-2xl), 5vw, var(--text-3xl));
     letter-spacing: -0.04em;
     line-height: 1.15;
     margin: 16px 0;
@@ -29,7 +29,7 @@
 }
 
 .eyebrow {
-  color: #f1a9c6;
+  color: var(--lab-accent);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 700;
@@ -39,7 +39,7 @@
 .machine {
   background: var(--bg-raised);
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
@@ -56,7 +56,7 @@
 }
 
 .dot {
-  background: #f1a9c6;
+  background: var(--lab-accent);
   border-radius: 50%;
   height: 7px;
   width: 7px;
@@ -93,7 +93,7 @@
     background: var(--bg-overlay);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    color: #f1a9c6;
+    color: var(--text-primary);
     font-family: var(--font-mono);
     padding: 6px 10px;
   }

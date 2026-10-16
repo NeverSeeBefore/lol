@@ -14,7 +14,7 @@
   margin-bottom: 30px;
 
   h1 {
-    font-size: clamp(34px, 5vw, 56px);
+    font-size: clamp(var(--text-2xl), 5vw, var(--text-3xl));
     letter-spacing: -0.04em;
     line-height: 1.15;
     margin: 16px 0;
@@ -28,7 +28,7 @@
 }
 
 .eyebrow {
-  color: #f1a9c6;
+  color: var(--lab-accent);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   font-weight: 700;
@@ -44,7 +44,7 @@
 .filter {
   background: var(--bg-raised);
   border: 1px solid var(--border-control);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   color: var(--text-secondary);
   cursor: pointer;
   font: inherit;
@@ -57,9 +57,9 @@
   }
 
   &.active {
-    background: rgb(241 169 198 / 12%);
-    border-color: #f1a9c6;
-    color: #f1a9c6;
+    background: var(--accent-bg);
+    border-color: var(--accent);
+    color: var(--accent-text);
   }
 }
 
@@ -96,7 +96,7 @@
 
   &:hover {
     background: var(--bg-overlay);
-    border-color: #f1a9c6;
+    border-color: var(--accent);
     transform: translateY(-2px);
   }
 }
