@@ -7,6 +7,7 @@ const LoadingPage = lazy(() => import('./LoadingPage'));
 const PixelStudioPage = lazy(() => import('./PixelStudioPage'));
 const CellularLabPage = lazy(() => import('./CellularLabPage'));
 const PixelWallPage = lazy(() => import('./PixelWallPage'));
+const RipplePage = lazy(() => import('./RipplePage'));
 
 export interface ExperimentItem {
   path: string;
@@ -52,5 +53,11 @@ export const experiments: ExperimentItem[] = [
     name: '像素背景墙',
     number: '06',
     component: PixelWallPage,
+  },
+  {
+    path: 'ripple',
+    name: '点阵涟漪',
+    number: '07',
+    component: RipplePage,
   },
 ];

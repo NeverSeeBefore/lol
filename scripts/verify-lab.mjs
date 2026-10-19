@@ -346,3 +346,42 @@ test('single-stream playback preserves palette alpha', () => {
   playback.sample(0);
   assert.equal(playback.colorAt(0, 0), '#ff000080');
 });
+
+test('ripple timeline forms dots, sends three waves, and collapses to a seed', () => {
+  const { sampleRippleCell, sampleRippleStage } = loadTypescript('src/components/RippleGrid/ripple.ts');
+  const blank = sampleRippleCell(11, 6, 23, 13, 0, []);
+  const center = sampleRippleCell(11, 6, 23, 13, 1, []);
+  const forming = sampleRippleCell(15, 6, 23, 13, 3.1, []);
+  const grownEdge = sampleRippleCell(15, 6, 23, 13, 5.5, []);
+  const eye = sampleRippleCell(9, 5, 23, 13, 5.5, []);
+  const paleEye = sampleRippleCell(8, 5, 23, 13, 5.5, []);
+  assert.equal(blank.energy, 0);
+  assert.ok(center.energy > blank.energy);
+  assert.ok(forming.formation > 0 && forming.formation < 1);
+  assert.ok(grownEdge.energy > forming.energy);
+  assert.ok(eye.highlight > grownEdge.highlight);
+  assert.ok(eye.highlight > paleEye.highlight && paleEye.highlight > grownEdge.highlight);
+  for (const launch of [5.15, 5.85, 6.55]) {
+    const wave = sampleRippleCell(11, 6, 23, 13, launch, []);
+    const between = sampleRippleCell(11, 6, 23, 13, launch - 0.25, []);
+    assert.ok(wave.highlight > between.highlight);
+  }
+  assert.ok(sampleRippleStage(9.1).zoom < sampleRippleStage(8.2).zoom);
+  assert.ok(sampleRippleStage(9.55).zoom < 0.1);
+  assert.ok(sampleRippleStage(9.6).seed > 0);
+  const cycleEnd = sampleRippleStage(9.999);
+  const nextCycle = sampleRippleStage(10);
+  assert.ok(cycleEnd.seed > 0.99 && nextCycle.seed > 0.99);
+  assert.ok(Math.abs(cycleEnd.zoom - nextCycle.zoom) < 0.001);
+  assert.ok(sampleRippleStage(10.6).zoom > nextCycle.zoom);
+  const impulse = [{ x: 11, y: 6, startedAt: 5 }];
+  const atWavefront = sampleRippleCell(17, 6, 23, 13, 6.15, impulse);
+  const withoutImpulse = sampleRippleCell(17, 6, 23, 13, 6.15, []);
+  assert.ok(atWavefront.highlight > withoutImpulse.highlight);
+  assert.ok(
+    [blank, center, forming, grownEdge, eye, atWavefront].every(
+      ({ energy, highlight, scale }) =>
+        energy >= 0 && energy <= 1 && highlight >= 0 && highlight <= 1 && scale > 0 && scale <= 1.2,
+    ),
+  );
+});
